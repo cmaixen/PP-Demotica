@@ -107,15 +107,14 @@ Tijdens de eerste examenperiode organiseren we een tussentijdse examinatie die p
 ￼￼
 ## ￼Belangrijke data
 
-|*￼￼￼Actie*                                                       |*Deadliner*                      | 
-|_______________________________________________________________|__________________________________|
-￼￼Indienen tussentijdse versie code + documentatie op Pointcarreé | ￼Woensdag 08-01-2014 (23.59h)     | 
-￼￼Eerste tussentijdse evaluatie                                   |￼ Laatste week van de eerste zittijd|
-￼￼Indienen finale versie code + documentatie                      |￼ Maandag 26-05-2012
-￼￼Projectverdediging                                              |￼Tweede zittijd
+Actie        | Deadline      
+-------- | ----------------------------------------------------------------------
+Indienen tussentijdse
+ versie code + 
+documentatie op Pointcarré   |  documentatie op PointcarréWoensdag 08-01-2014 (23.59h) | Eerste tussentijdse evaluatie
+| Laatste week van de eerste zittijd| Content Cell
 
-
-__￼￼￼￼￼￼Over bovenvermelde deadlines wordt niet gediscussieerd!__  
+__￼￼￼￼￼￼Over bovenvermelde deadlines wordt niet		 gediscussieerd!__  
 __Per dag te laat gaan vier punten van je totaalscore af. Bij het overschrijden van 4 dagen te laat, wordt je afwezig gequoteerd. Dit geldt voor alle deadlines!__
 
 ## ￼Hints en Tips
