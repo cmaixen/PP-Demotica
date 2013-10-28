@@ -1,37 +1,53 @@
-￼Programmeerproject
-2013-2014
-Tweede jaar Bachelor in de Computerwetenschappen
-Titularis: Prof. Theo D’Hondt Begeleidende Assistenten:
-Kevin Van Vaerenbergh (kevvaere@vub.ac.be) Lode Hoste (lhoste@vub.ac.be)
+￼Programmeerproject 2013-2014
+============================
+ 
+Tweede jaar Bachelor in de Computerwetenschappen  
+Titularis: Prof. Theo D’Hondt Begeleidende Assistenten:  
+Kevin Van Vaerenbergh (kevvaere@vub.ac.be) Lode Hoste (lhoste@vub.ac.be)  
 Yves Vandriessche (yvdriess@vub.ac.be) project2ba@dinf.vub.ac.be
-Context
+
+
+##Context
+
 In het programmeerproject van 1ste bachelor hebben jullie een eerste groot programma in Scheme gebouwd. In dit project maken jullie een complete softwaretoepassing. Dit wil zeggen dat je uiteindelijke “product” niet enkel bestaat uit een werkend programma. Enerzijds dien je je toepassing te beschrijven, zowel gericht naar de eindgebruiker als naar andere ontwikkelaars die eventuele aanpassingen aan jouw project moet kunnen uitvoeren. Anderzijds dient je code aan bepaalde kwaliteitseisen te voldoen, waaronder een uitvoerige documentatie, het hanteren van coding conventies en testing.
+
 In dit project is er veel ruimte gelaten om je creativiteit op bot te vieren. Dit document bevat een algemene omschrijving van het onderwerp, de opdracht en maar een lijst van ‘minimale’ vereisten. Je wordt aangemoedigd om de originele opdracht te verrijken met eigen inbreng, zolang dit in de thema van de opdracht past.
-Opdracht
-Het onderwerp van je toepassing is het ontwerpen van een domotica energie monitoring systeem. Verschillende input sensoren zullen ter beschikking zijn en je toepassing moet kunnen communiceren met deze sensoren. De toepassing moet het gebruik van de verschillende sensoren kunnen voorstellen, gebruik makende van een grafische user interface.
-￼￼￼￼
-￼In het kader van deze toepassing komen dus een aantal “nieuwe” elementen aan bod:
-• Communiceren met domotica hardware (sensoren en actuatoren) om informatie uit de omgeving te verzamelen.
-• Een grafische user interface (GUI) om de verzamelde informatie te bekijken en te navigeren.
-• Een lokale databank gebruiken om niet alleen sensor geschiedenis in op te slaan, maar ook om je programma persistent te maken: bv. verder lopen zoals ervoor na een stroompanne.
+
+##Opdracht
+
+Het onderwerp van je toepassing is het ontwerpen van een domotica energie monitoring systeem. 
+
+Verschillende input sensoren zullen ter beschikking zijn en je toepassing moet kunnen communiceren met deze sensoren. De toepassing moet het gebruik van de verschillende sensoren kunnen voorstellen, gebruik makende van een grafische user interface.   
+￼￼In het kader van deze toepassing komen dus een aantal “nieuwe” elementen aan bod:
+* Communiceren met domotica hardware (sensoren en actuatoren) om informatie uit de omgeving te verzamelen.
+* Een grafische user interface (GUI) om de verzamelde informatie te bekijken en te navigeren.
+* Een lokale databank gebruiken om niet alleen sensor geschiedenis in op te slaan, maar ook om je programma persistent te maken: bv. verder lopen zoals ervoor na een stroompanne.
+
 Gezien de complexiteit om met werkelijke hardware te werken, splitsen we de opdracht in twee. In het eerste semester leggen we de nadruk op het schrijven van je domotica energie monitoring systeem, met bijhorende grafische interface en databank. Hierbij ligt de nadruk op het toepassen van de programmeer en software engineering technieken in een vertrouwde Scheme omgeving: Racket. In dit eerste deel van de opdracht zullen jullie de gebruikte sensoren op een simpele manier simuleren. In het tweede deel wordt deze simulatie vervangen door werkelijke hardware. Hierbij komen heel wat nieuwe concepten bij kijken, zoals het programmeren van een geïntegreerde computer, door middel van een gespecialiseerde Scheme omgeving.
-Dit document beschrijft het eerste deel van de opdracht. Het tweede deel bouwt logischerwijs verder op het eerste deel, daarmee is het cruciaal dat dit eerste deel in orde is. Er is een tussentijdse examinatie op het einde van de eerste zittijd, waar je punten en feedback krijgt voor het eerste deel van je project.
+__Dit document beschrijft het eerste deel__  van de opdracht. Het tweede deel bouwt logischerwijs verder op het eerste deel, daarmee is het cruciaal dat dit eerste deel in orde is. Er is een tussentijdse examinatie op het einde van de eerste zittijd, waar je punten en feedback krijgt voor het eerste deel van je project.
 Het tweede deel van de opdracht zal je worden voorgesteld bij de aanvang van het tweede semester. Je zal natuurlijk nog altijd aanpassingen kunnen doen aan de design en broncode van het eerste deel tijdens het tweede semester.
-Communicatie met apparaten
+
+##Communicatie met apparaten
+
 De virtuele domotica opstelling waarmee we werken in dit eerste deel bevat drie soorten hardware:
-• Een normale computer of server die dienst doet als aanspreekpunt van het domotica-systeem voor de gebruiker: de majordomo of huisopzichter.
-• Per kamer een gelimiteerde en geïntegreerde computer die de fysieke connecties beheert van omringende sensoren en actuatoren: de steward.
-• Verschillende domotica devices of apparaten: sensoren en actuatoren die
+* Een normale computer of server die dienst doet als aanspreekpunt van het domotica-systeem voor de gebruiker: __de majordomo__ of huisopzichter.
+* Per kamer een gelimiteerde en geïntegreerde computer die de fysieke connecties beheert van omringende sensoren en actuatoren __de steward__.
+* Verschillende domotica __devices__ of apparaten: sensoren en actuatoren die
 rondom het huis geplaatst worden. Er zijn sensoren die beweging kunnen meten, lichtintensiteit, temperatuur, stroomverbruik, etc. Actuatoren kunnen ook acties ondernemen, zoals een schakelaar die de stroom afsluit of een
 
 ￼automatisch rolluik. Vele apparaten combineren verschillende actuatoren en sensoren, zoals bijvoorbeeld een thermostaat die een thermometer, bewegingssensor, lichtsensor en schakelaar bevat.
 Je broncode voor dit eerste deel van de opgave draait virtueel op de majordomo. De minimale vereiste functionaliteit van de majordomo software wordt hier vastgelegd. De communicatie met en functionaliteit van de steward en apparaten zal je zelf moeten simuleren. De functionaliteit van de steward en apparaten worden pas vastgelegd in het tweede deel van de opdracht. We leggen niet vast hoe je deze simulatie moet opstellen, het ontwikkelen van een passend ontwerp is deel van de opdracht.
 We leggen wel vast hoe je raamwerk met deze simulatie moet communiceren, dit om de functionaliteit in lijn te brengen met het tweede deel van de opdracht. Eerder dan dit communicatieprotocol formeel vast te leggen, doen we dit aan de hand van een scenario. Het communicatieprotocol scenario kan je vinden in de Appendix A onderaan dit document. Significante aanpassingen aan het gedemonstreerde protocol bespreek je best eerst met de begeleidende assistenten.
-Grafische interface
-Voor de grafische interface maak je gebruik van de faciliteiten in Racket, een dialect van Scheme. Je dient dus deze “Racket Graphical Interface Toolkit” onder de loep te nemen. Functionaliteit is heel belangrijk. De minimaal te ondersteunen functionaliteit van je GUI wordt toegelicht aan de hand van gebruikers scenarios die je kan vinden in Appendix B.
+
+##Grafische interface
+
+Voor de grafische interface maak je gebruik van de faciliteiten in Racket, een dialect van Scheme. Je dient dus deze “Racket Graphical Interface Toolkit” onder de loep te nemen. Functionaliteit is heel belangrijk. De minimaal te ondersteunen functionaliteit van je GUI wordt toegelicht aan de hand van gebruikers scenarios die je kan vinden in __Appendix B__.  
+
 We willen ook benadrukken dat je moet trachten de echte functionaliteit van je applicatie te scheiden van de grafische interface. Een goede vuistregel gaat als volgt: stel dat je een andere interface moet toevoegen (bv. één die meer geschikt is om te gebruiken op een smartphone), hoeveel van je code kan je hergebruiken, hoeveel moet je aanpassen?
+
 Met toestemming van de begeleidende assistenten mag je, in de plaats van de Racket GUI, een website of web applicatie bouwen. Let op dat je hiervoor nog steeds binnen Racket moet werken, zonder externe programma’s of frameworks. Bekijk dus eerst de web application bibliotheek van Racket alvorens toestemming te vragen.
-Lokale databank
+
+##Lokale databank
 
 ￼Maak gebruik van een database om de grote hoeveelheid aan informatie op te slaan. Als DBMS gebruiken jullie SQLite. Een bibliotheek voor het aanroepen van SQLite databases is beschikbaar voor Racket.
 Naast het bijhouden en oproepen van verzamelde sensor-informatie, moet je de database ook gebruiken om persistentie te verzekeren. Dit wil zeggen dat na een stroomonderbreking (je sluit Racket af) je programma terug moet kunnen opstarten en automatisch verder lopen zoals ervoor. Je mag ervan uitgaan dat bij het opstarten een (start) functie zonder argumenten wordt aanroepen. De database moet dus transparant voor de gebruiker opslaan wat de configuratie- opties zijn, welke apparaten aanwezig zijn, de doorlopende opdrachten, etc. Tip: begin pas aan je databank en persistentie module nadat de rest van de functionaliteit in orde is.
@@ -89,26 +105,27 @@ Alle in te dienen documenten converteer je naar PDF formaat. Je kan dit doen met
 Tussentijdse examinatie
 Tijdens de eerste examenperiode organiseren we een tussentijdse examinatie die punten oplevert voor het eerste deel van het project. Hierbij krijgt elke student 15 minuten: ongeveer vijf minuten demonstratie van functionaliteiten, vijf minuten uitleg bij je ontwerp en vijf minuten vragen. Dit telt als een partieel examen, waarbij je als je niet tevreden bent met je score het examen opnieuw kan doen tijdens de tweede examenperiode. De tussentijdse examinatie laat ons ook toe om mogelijke problemen met je project te ontdekken en aan te pakken voor het tweede deel aanvat.
 ￼￼
-￼Belangrijke data
-￼￼￼Actie
-￼Deadline
-￼￼Indienen tussentijdse versie code + documentatie op Pointcarré
-￼Woensdag 08-01-2014 (23.59h)
-￼￼Eerste tussentijdse evaluatie
-￼Laatste week van de eerste zittijd
-￼￼Indienen finale versie code + documentatie
-￼Maandag 26-05-2012
-￼￼Projectverdediging
-￼Tweede zittijd
-￼￼￼￼￼￼Over bovenvermelde deadlines wordt niet gediscussieerd! Per dag te laat gaan vier punten van je totaalscore af. Bij het overschrijden van 4 dagen te laat, wordt je afwezig gequoteerd. Dit geldt voor alle deadlines!
+## ￼Belangrijke data
 
-￼Hints en Tips
-• Leg een eigen deadline vast die bijvoorbeeld een week of twee weken voor de echte deadline ligt. Zo zorg je ervoor dat je project zeker op tijd af is en dat je nog tijd genoeg hebt om een goed verslag te schrijven.
-• Er wordt veel aandacht besteed aan het ontwerp en het gebruik van ADT’s. Een project zonder ADT’s of met slechte ADT’s is per definitie een slecht project.
-• Druk de listings van je code af zoals ze in de editor van je programmeeromgeving voorkomen. Bijgewerkte listings maken het veel moeilijker om de samenhang van de verschillende delen te begrijpen en geven een ongeloofwaardige indruk. Voorzie regelnummers en paginanummers zodat je een goede inhoudstafel kan maken van je code.
-• Laat geen debugging code in de broncode staan. Het maakt je broncode slordig en schaadt de leesbaarheid.
-• Lees je verslag na! Verslagen met veel schrijffouten worden niet geduld.
-• Bij vragen of problemen kan u altijd terecht bij de projectbegeleiders op
+|*￼￼￼Actie*                                                       |*Deadliner*                      | 
+|_______________________________________________________________|__________________________________|
+￼￼Indienen tussentijdse versie code + documentatie op Pointcarreé | ￼Woensdag 08-01-2014 (23.59h)     | 
+￼￼Eerste tussentijdse evaluatie                                   |￼ Laatste week van de eerste zittijd|
+￼￼Indienen finale versie code + documentatie                      |￼ Maandag 26-05-2012
+￼￼Projectverdediging                                              |￼Tweede zittijd
+
+
+__￼￼￼￼￼￼Over bovenvermelde deadlines wordt niet gediscussieerd!__  
+__Per dag te laat gaan vier punten van je totaalscore af. Bij het overschrijden van 4 dagen te laat, wordt je afwezig gequoteerd. Dit geldt voor alle deadlines!__
+
+## ￼Hints en Tips
+
+* Leg een eigen deadline vast die bijvoorbeeld een week of twee weken voor de echte deadline ligt. Zo zorg je ervoor dat je project zeker op tijd af is en dat je nog tijd genoeg hebt om een goed verslag te schrijven.
+* Er wordt veel aandacht besteed aan het ontwerp en het gebruik van ADT’s. Een project zonder ADT’s of met slechte ADT’s is per definitie een slecht project.
+* Druk de listings van je code af zoals ze in de editor van je programmeeromgeving voorkomen. Bijgewerkte listings maken het veel moeilijker om de samenhang van de verschillende delen te begrijpen en geven een ongeloofwaardige indruk. Voorzie regelnummers en paginanummers zodat je een goede inhoudstafel kan maken van je code.
+* Laat geen debugging code in de broncode staan. Het maakt je broncode slordig en schaadt de leesbaarheid.
+* Lees je verslag na! Verslagen met veel schrijffouten worden niet geduld.
+* Bij vragen of problemen kan u altijd terecht bij de projectbegeleiders op
 project2ba@dinf.vub.ac.be.
 ￼
 ￼Appendix A: Apparaat Communicatieprotocol Scenario
