@@ -37,11 +37,11 @@ rondom het huis geplaatst worden. Er zijn sensoren die beweging kunnen meten, li
 
 ￼automatisch rolluik. Vele apparaten combineren verschillende actuatoren en sensoren, zoals bijvoorbeeld een thermostaat die een thermometer, bewegingssensor, lichtsensor en schakelaar bevat.
 Je broncode voor dit eerste deel van de opgave draait virtueel op de majordomo. De minimale vereiste functionaliteit van de majordomo software wordt hier vastgelegd. De communicatie met en functionaliteit van de steward en apparaten zal je zelf moeten simuleren. De functionaliteit van de steward en apparaten worden pas vastgelegd in het tweede deel van de opdracht. We leggen niet vast hoe je deze simulatie moet opstellen, het ontwikkelen van een passend ontwerp is deel van de opdracht.
-We leggen wel vast hoe je raamwerk met deze simulatie moet communiceren, dit om de functionaliteit in lijn te brengen met het tweede deel van de opdracht. Eerder dan dit communicatieprotocol formeel vast te leggen, doen we dit aan de hand van een scenario. Het communicatieprotocol scenario kan je vinden in de __Appendix A__ onderaan dit document. Significante aanpassingen aan het gedemonstreerde protocol bespreek je best eerst met de begeleidende assistenten.
+We leggen wel vast hoe je raamwerk met deze simulatie moet communiceren, dit om de functionaliteit in lijn te brengen met het tweede deel van de opdracht. Eerder dan dit communicatieprotocol formeel vast te leggen, doen we dit aan de hand van een scenario. Het communicatieprotocol scenario kan je vinden in de [__Appendix A__](https://github.com/cmaixen/PP-Demotica/blob/master/Appendix_A.md) onderaan dit document. Significante aanpassingen aan het gedemonstreerde protocol bespreek je best eerst met de begeleidende assistenten.
 
 ##Grafische interface
 
-Voor de grafische interface maak je gebruik van de faciliteiten in Racket, een dialect van Scheme. Je dient dus deze “Racket Graphical Interface Toolkit” onder de loep te nemen. Functionaliteit is heel belangrijk. De minimaal te ondersteunen functionaliteit van je GUI wordt toegelicht aan de hand van gebruikers scenarios die je kan vinden in __Appendix B__.  
+Voor de grafische interface maak je gebruik van de faciliteiten in Racket, een dialect van Scheme. Je dient dus deze “Racket Graphical Interface Toolkit” onder de loep te nemen. Functionaliteit is heel belangrijk. De minimaal te ondersteunen functionaliteit van je GUI wordt toegelicht aan de hand van gebruikers scenarios die je kan vinden in [__Appendix B__](https://github.com/cmaixen/PP-Demotica/blob/master/Appendix_B.md).  
 
 We willen ook benadrukken dat je moet trachten de echte functionaliteit van je applicatie te scheiden van de grafische interface. Een goede vuistregel gaat als volgt: stel dat je een andere interface moet toevoegen (bv. één die meer geschikt is om te gebruiken op een smartphone), hoeveel van je code kan je hergebruiken, hoeveel moet je aanpassen?
 
@@ -61,9 +61,9 @@ Hieronder beschrijven we de functionaliteit die je toepassing zeker moet bevatte
 * Een steward ADT dat toelaat:
     - Een apparaat toe te voegen met naam, serienummer en communicatieadres.
     - Gegeven een naam, een communicatiekanaal te openen met een toegevoegd apparaat.
-    - Een simulator die het gedrag van minstens twee soorten apparaten kan simuleren over het communicatiekanaal, zoals beschreven in __Appendix A__. (bv. schakelaar, lichtsensor)
+    - Een simulator die het gedrag van minstens twee soorten apparaten kan simuleren over het communicatiekanaal, zoals beschreven in [__Appendix A__](https://github.com/cmaixen/PP-Demotica/blob/master/Appendix_A.md) . (bv. schakelaar, lichtsensor)
 * Een grafische interface die de gebruikers scenario’s ondersteunt uit
-__Appendix B__.
+[__Appendix B__](https://github.com/cmaixen/PP-Demotica/blob/master/Appendix_B.md).
 * Eenmalige informatie op te vragen en visualiseren: wat is de temperatuur in mijn kamer op dit moment.
 
 * Periodieke informatie op te vragen en visualiseren: een tabel of grafiek die de gemiddelde temperatuur van mijn kamer weergeeft over de hele dag.
