@@ -1,7 +1,8 @@
 #Appendix A: Apparaat Communicatieprotocol Scenario
 
 
-	;; Ik vraag een input/output port aan het steward ADT ;; voor de slaapkamer, om met een 	specifieke lamp te ;; 'praten'.		> (define slaapkamer-hoofdlamp-port	(slaapkamer-steward 'open-device-io-port 'hoofdlamp))	
+
+    ;; Ik vraag een input/output port aan het steward ADT ;; voor de slaapkamer, om met een 	specifieke lamp te ;; 'praten'.		> (define slaapkamer-hoofdlamp-port	(slaapkamer-steward 'open-device-io-port 'hoofdlamp))	
 	;; Dit zorgt ervoor dat ik niet	;; 'slaapkamer-hoofdlamp-port' moet heralen bij elke ;; (read) en (write) commando.		> (current-input-port slaapkamer-hoofdlamp-port)		> (current-output-port slaapkamer-hoofdlamp-port)	
 	;; Brandt het licht in de slaapkamer?		> (write '(GET POW) slaapkamer-hoofdlamp-port) 		> (read)'(ACK (POW OFF))
 			;; Een vraag of antwoord is een lijst van symbolen,	;;  met het eerste element een identificatie en met	;;  (PARAMETER . WAARDEN) lijsten als volgende elementen.	;; Zet het licht aan.		> (write '(PUT (POW ON)) slaapkamer-hoofdlamp-port)

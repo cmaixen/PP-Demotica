@@ -1,0 +1,63 @@
+#lang racket
+(require db)
+
+
+;Simulator
+;Alles is waar de steward met communiceert heeft een naam serienummmer dus hier maken we een superklasse voor
+
+(define device%
+  (class object%
+    (super-new)
+    (init-field serialnumber)
+
+ (define/public (get-serialnumber) serialnumber)
+
+))
+
+
+
+(define steward%
+  (class object%
+    (super-new)
+    (init db)
+    (define/public (add-device name serialnumber port)
+      (make-object device% name serialnumber)
+      ;apparaat en port in database toevoegen 
+      ;bevestiging
+      (display "device succefully added!"))
+    
+   (define/public (add-port name device) 5)))
+     ;controleren of object is in database
+     ;zoja veranderen of toevoegen van port
+     ;zonee foutmelding "eerst apparaat toevoegen! 
+   
+     
+
+
+
+;Testing van object
+
+(define test (make-object device% "yannick"))
+(send test get-serialnumber)
+
+
+     
+   
+     
+(define pgc (sqlite3-connect  #:database "/Users/yannickmerckx/Dropbox/Unif/2de bachelor/Programmeerproject 2/PP-Demotica/pp_db.sqlite"
+#:mode 'read/write))
+
+
+(connected? pgc)
+
+
+> (query-exec pgc
+   "create temporary table the_numbers (n integer, d varchar(20))")
+> (query-exec pgc
+    "insert into the_numbers values (0, 'nothing')")
+> (query-exec pgc
+    "insert into the_numbers values (1, 'the loneliest number')")
+> (query-exec pgc
+    "insert into the_numbers values (2, 'company')")
+
+(query-row pgc "select * from the_numbers where n = 0")
