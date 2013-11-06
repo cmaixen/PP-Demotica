@@ -9,42 +9,32 @@
 ;je moet je devices simuleren voor simulatie
 
 
-(define (tempsensor name serialnumber port-adress)
+(define (tempsensor name serialnumber)
   (let-values ([(input output) (make-pipe)]  ;aanmaken van outputfile bij het aanmaken van het object
-        ;je mag er vanuit gaan dat je eerst een outputport hebt aangezien je eerst wil schrijven 
-        ;voor je leest van je port
-        
-      [(status) 'output];nodig om te weten of je als port een output of input port moet teruggeven
-      [(change) #f]     ;nodig om eerste keer schrijven te overbruggen (zie "my-device-port")
-       [(written) #f])           ;je moet omschakeling zien de overbruggen van inputfile naar outputfile voor de eerste keer.
-    (define current-temp 25)
-    
-    (define (get-name) (begin
-                           ;in produce-answer  lees je de file 
-                         (write '(name  name) output)))
-                         
-    (define get-serialnumber serialnumber)
-    (define get-portadress port-adress)
-    (define (get-status) status)
+               [(status) 'output] 
+               [(current-temp) 25] ) ;je mag er vanuit gaan dat je eerst een outputport hebt aangezien je eerst wil schrijven 
     
     (define (get-temp) 
-      (begin 
-        (display "the current temparature is ")
-        (display current-temp)
-        (display " degrees")))
-  
-   (define (generate-answer commando)
-     (let( (prefix (car commando))
-           (needed (cadr commando)))
-       (if (eq? 'get prefix)
-           (case needed
-             ((name) (get-name))
-             (else (display "needed not defined")))
-           (display "prefix not valid"))))
-       
-     
+      (write `(ACK (TEMP ,current-temp)) output))
     
-
+    (define (get-name)
+      (write `(ACK (NAME  ,name)) output))
+    
+    (define (get-serial) 
+      (write `(ACK (SERIAL ,serialnumber)) output))
+    
+    
+    (define (generate-answer commando)
+      (let( (prefix (car commando))  ;controle of commando geldig is
+            (asked (cadr commando))) ;wat er gevraagd is
+        (if (eq? 'get prefix)
+            (case asked
+              ((name) (get-name))
+              ((temp) (get-temp))
+              ((serial) (get-serial))
+              (else (write `(NACK , commando) output)))
+            (write `(NACK , commando) output))))
+   
     
     
     ;bij elke oproep van my-device-port wordt de variable port verandert in een iput/ouputport
@@ -53,9 +43,9 @@
       (if (eq? status 'output)
           (begin (set! status 'input)
                  output)
-                 
+          
           (begin (set! status 'output)
-                 (generate-answer (read input))
+                 (generate-answer (read input)) ;van de moment je een read vraagt aan het object, gaat het object zijn antwoord genereren.
                  input)))
     
     
@@ -69,7 +59,6 @@
     
     (define (dispatch message)
       (case message
-        ((status) get-status)
         ((get-device-port) my-device-port)
         (else (error 'tempsensor "unknown message ~a" message))))
     
@@ -78,23 +67,51 @@
 
 
 
-;
-(define room-tempsensor (tempsensor "woonkamer" "1234" "tempsensor-woonkamer"))
 
-;(send room-tempsensor  'get 'name)
+;Testing Unit
 
-;(send room-tempsensor  '(get name))
+(display "Testing Unit")
+(newline)
+(display "------------")
+(newline)
+;defining object
 
+(define room-tempsensor (tempsensor "woonkamer" "1234"))
 
-;testing met read
-
-
-
-
-
-
+(display "Valid Commands")
 
 
 (write '(get name) (send room-tempsensor 'get-device-port))
 (read (send room-tempsensor 'get-device-port))
+
+(write '(get temp) (send room-tempsensor 'get-device-port) )
+(read (send room-tempsensor 'get-device-port))
+
+(write '(get serial) (send room-tempsensor 'get-device-port) )
+(read (send room-tempsensor 'get-device-port))
+
+(newline)
+(display "fout prefix")
+(newline)
+
+(write '(gett serial) (send room-tempsensor 'get-device-port) )
+(read (send room-tempsensor 'get-device-port))
+
+(newline)
+(display "fout gevraagde")
+(newline)
+
+(write '(get seriaaaal) (send room-tempsensor 'get-device-port) )
+(read (send room-tempsensor 'get-device-port))
+
+(newline)
+(display "Error bij 2X read of 2X write")  
+(newline)
+
+(write '(get serial) (send room-tempsensor 'get-device-port) )
+(write '(get serial) (send room-tempsensor 'get-device-port) )
+
+(read (send room-tempsensor 'get-device-port))
+(read (send room-tempsensor 'get-device-port))
+
 
