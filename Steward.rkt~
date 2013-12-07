@@ -1,1 +1,107 @@
 #lang racket
+(#%require "Utillities.rkt")
+(#%require "Devices.rkt")
+
+(require db)
+
+
+(provide make-steward)
+
+(define db-pad "/Users/yannickmerckx/Dropbox/Unif/2de bachelor/Programmeerproject 2/PP-Demotica/pp_db.sqlite")
+
+
+(define (make-steward location)
+  
+  (let ((db (sqlite3-connect  #:database db-pad
+                              #:mode 'read/write))
+        (list-of-objects '())
+        (location location))
+    
+    (define (connect?)
+      (connected? db))
+    
+    (define (list_devices)
+      (query-rows db "select * from the_devices"))
+    
+    (define (update-devices name serialnumber) 
+      (set! list-of-objects  (cons (make-tempsensor name serialnumber) list-of-objects)))
+    
+    ;je bekijkt de naam als primary key, je let er ook op dat er geen dubbele serial in staat 
+    
+    (define (add-device name serialnumber com-adress)
+      ;apparaat en port in database toevoegen 
+      
+      
+      (cond ((query-maybe-row db "select name from the_devices where name = $1" name);we namen de lamp als primary key
+             (error 'steward "You can not add two devices with the same name!"))
+            
+            ((query-maybe-value db "select serialnumber from the_devices where serialnumber = $1" serialnumber)
+             (error 'steward "serialnumber must be unique!"))
+            (else
+             (query-exec db "insert into the_devices values ($1, $2 , $3)" name serialnumber com-adress)
+             (update-devices name serialnumber)
+             (display "device added"))))
+    
+    
+        (define (look-up-device name arg) 
+      (define (loop lst)
+         (if (empty? lst)
+             (begin 
+            (error 'steward  "the device ~a doesn't exist!" name)
+            #f)
+        (let* ((first-object (car lst))
+               (name-object (first-object 'get-name-sim)))
+          (if (equal? name-object  name )
+              (send first-object arg)
+              (loop (cdr lst))))))
+      
+      (loop list-of-objects))
+    
+    
+    
+    
+    (define (open-output-device name)
+       (look-up-device name 'get-device-output-port))
+  
+    
+    (define (open-input-device name)
+      (look-up-device name 'get-device-input-port))
+
+        
+    (define (initialize device_list)
+      (define (loop lst)
+        (if (eq? (list_size lst) 0)
+            (display "initialization done")
+            (let* ((devicevector (car lst))
+                   (device_name (vector-ref devicevector 0))
+                   (device_serial (vector-ref devicevector 1))
+                   (device_comadress (vector-ref devicevector 2)))
+              (set! list-of-objects (cons (make-tempsensor device_name device_serial) list-of-objects))
+              (loop (cdr lst)))))
+      (loop device_list))
+    
+  
+  
+    
+    
+    (define (dispatch message)
+      (case message
+        ((connect?) connect?)
+        ((add-device) add-device)
+        ((get-location) location)
+        ((list_devices) list_devices)
+        ((open-output-device) open-output-device)
+        ((open-input-device) open-input-device)
+        (else (error 'steward "unknown message ~a" message))))
+    
+    
+    ;initialization of Steward
+    ;Het genereren van de objectlijst
+  (initialize  (query-rows db "select * from the_devices"))
+  
+  dispatch ))
+
+
+
+
+

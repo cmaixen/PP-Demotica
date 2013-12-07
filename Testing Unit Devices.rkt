@@ -2,6 +2,7 @@
 (#%require "Utillities.rkt")
 (#%require "Devices.rkt")
 
+
 ;Testing Unit
 
 (display "Testing Unit")
@@ -12,39 +13,45 @@
 
 (define room-tempsensor (make-tempsensor "woonkamer" "1234"))
 
-(display "Valid Commands")
 
 
-(write '(get name) (send room-tempsensor 'get-device-port))
-(read (send room-tempsensor 'get-device-port))
+(define (out) (send room-tempsensor 'get-device-output-port))
+(define( in ) (send room-tempsensor 'get-device-input-port))
 
-(write '(get temp) (send room-tempsensor 'get-device-port) )
-(read (send room-tempsensor 'get-device-port))
 
-(write '(get serial) (send room-tempsensor 'get-device-port) )
-(read (send room-tempsensor 'get-device-port))
+;(display "Valid Commands")
+;(newline )
 
-(newline)
+
+(write '(get name) (out))
+(read (in))
+
+(write '(get temp) (out)) 
+(read (in))
+
+(write '(get serial) (out)) 
+(read (in))
+
+(newline )
 (display "fout prefix")
-(newline)
+(newline )
 
-(write '(gett serial) (send room-tempsensor 'get-device-port) )
-(read (send room-tempsensor 'get-device-port))
+(write '(gett serial) (out)) 
+(read (in))
 
-(newline)
-(display "fout gevraagde")
-(newline)
+(newline )
+(display "fout gevraagde" )
+(newline )
 
-(write '(get seriaaaal) (send room-tempsensor 'get-device-port) )
-(read (send room-tempsensor 'get-device-port))
+(write '(get seriaaaal) (out)) 
+(read (in))
 
-(newline)
-(display "Error bij 2X read of 2X write")  
-(newline)
+(newline )
+(display "2X read of 2X write is toegelaten, moet nog iets aan gedaaan worden!" )  
+(newline )
 
-(write '(get serial) (send room-tempsensor 'get-device-port) )
-(write '(get serial) (send room-tempsensor 'get-device-port) )
+(write '(get serial) (out)) 
+(write '(get serial) (out)) 
 
-(read (send room-tempsensor 'get-device-port))
-(read (send room-tempsensor 'get-device-port))
-
+(read (in))
+(read (in))

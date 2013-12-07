@@ -1,0 +1,207 @@
+#lang racket
+
+;GUI
+
+(require racket/gui/base)
+
+(#%require (prefix util: "Utillities.rkt"))
+
+
+
+
+
+(define listvb (list "yannick" "hallo" "best"))
+(define listdevices (list "lichtschakelaar" "thermometer"))
+
+
+; Make a frame by instantiating the frame% class
+(define mainframe (new frame% [label "Log in"]
+                       [width 800]
+                       [height 600]))
+(define mainframe2 (new frame% [label "Log in"]
+                        [width 800]
+                        [height 600]))
+
+
+
+(define tab
+  (new tab-panel%	 
+       [choices (list "Rooms" "Devices" "Map" "Logs" "Userinformation")]	 
+       [parent mainframe]
+       [callback (lambda (tab click)
+                     (case (send tab get-selection)
+                     
+                     ((1) (send tab change-children (lambda (x) (list tab1))))
+                     ((2) (send tab change-children (lambda (x) (list tab2))))
+                     ((3) (send tab change-children (lambda (x) (list tab3))))
+                    (else (send tab change-children (lambda (x) (list list-box))))))]))
+                     
+                   
+                          ;  (make-object bitmap% "/Users/yannickmerckx/Desktop/white-house-floor-plans.jpg")
+                          ;  (new bitmap-dc% [bitmap object]) ))
+                  
+
+
+
+
+;plattegrond
+(define plattegrond (make-object bitmap% "/Users/yannickmerckx/Desktop/white-house-floor-plans.jpg"))
+(define plat-dc
+  (new bitmap-dc% [bitmap plattegrond]) )
+
+;creeëren van buttons voor iedere tab
+(define (buttongenerator list area)
+  (if (empty? list)
+      (display "done")
+      
+      (let ((name (car list)))
+        (new button% [parent area] [label name]
+             [vert-margin 20]	 
+             [horiz-margin 20]	 
+             [min-width 20]	 
+             [min-height 20]
+             [callback (lambda (button click) (send button set-label "changed"))])
+        (buttongenerator (cdr list) area))))
+
+
+
+(define tab1 (new vertical-panel%
+                  [parent tab]
+                  [spacing 10]	 
+                  [alignment (list 'center 'center)]
+                  ))
+
+(define tab2 (new vertical-panel%
+                  [parent tab]
+                  [alignment (list 'center 'center)]
+                  ))
+(define tab3 (new vertical-panel% 
+                  [parent tab]
+                  [alignment (list 'center 'center)]
+                  ))
+
+
+(define list-box (new list-box%
+                      (label "List Box")
+                      (parent tab)
+                      (choices (list "Item 0"
+                                     "Item 1"
+                                     "Item 2")
+                               )
+                      (style (list 'single
+                                   'column-headers))
+                      (columns (list "First Column"
+                                     "Second Colum"))))
+
+
+(buttongenerator listvb tab1)
+(buttongenerator listdevices tab2)
+(send tab change-children (lambda (x) (list tab1)))
+
+(display (send list-box get-column-labels))
+
+;lijst met kolommen
+(send list-box get-column-labels)
+
+;initilize listbox met kolommen
+
+
+
+; Create a dialog
+(define dialog (new dialog% [parent mainframe] 
+                    [label "Welcome"]))
+
+
+
+; Add a horizontal panel to the dialog, with centering for buttons
+
+
+
+(define dialog_panel (new vertical-panel% [parent dialog]
+                           [min-width 100]
+                           [alignment '(center center)]
+                           [min-height 40]))
+
+(define User_panel (new horizontal-panel% [parent dialog]
+                        [min-width 100] 
+                        [min-height 10]))
+
+(define Password_panel (new horizontal-panel% [parent dialog]
+                            [alignment '(center center)]
+                            [min-width 100] 
+                            [min-height 4 ]))
+
+(define Button_panel (new horizontal-panel% [parent dialog]
+                          [alignment '(center center)]
+                          [min-width 100] 
+                          [min-height 20 ]))
+
+; LOGIN
+;-------
+
+; Add a text field to the dialog
+(new message%	 
+     [label "Welcome"]	 
+     [parent dialog_panel]
+     [enabled #t]	   	 	 
+     [min-width 100]	 
+     [min-height 20]	 
+     [auto-resize #t])
+
+;Textfields login
+
+(new text-field% [parent dialog_panel] [label "Username"] 	)
+(new text-field% [parent dialog_panel] [label "Password "])
+
+; Add Cancel and Ok buttons to the horizontal panel
+(define button-login (new button% [parent  Button_panel ] [label "Login"] [callback (lambda (button-cancel click)
+                                                                                    (send dialog show #f) (send mainframe set-label "Welcome to your personal Electricity Home Monitoring System"))]))
+
+(define button-cancel (new button% [parent  Button_panel ] [label "Cancel"] [callback
+                                                                           (lambda (button-cancel click)
+                                                                             (send dialog show #f)
+                                                                             (send mainframe show #f)
+                                                                             )]))
+
+;END LOGIN
+;---------
+
+
+
+
+
+;definieren van Bitmap
+(define object (make-object bitmap% 
+                 
+                 100
+                 20
+                 
+                 ))
+
+(define object-dc
+  (new bitmap-dc% [bitmap object]) )
+
+(send object-dc set-scale 1 1)
+(send object-dc set-text-foreground "black")
+(send object-dc draw-text "press this button" 0 0)
+(send object-dc set-smoothing 'aligned)
+
+;Button Generator
+;----------------
+
+
+(define button-changescreen (new button% [parent mainframe] [label object] [callback (lambda (button-changescreen click)
+                                                                                       
+                                                                                       (buttongenerator listvb mainframe)
+                                                                                       
+                                                                                       
+                                                                                       (send button-changescreen  show #f))]))
+
+
+
+; Show the dialog
+(send dialog show #t)	
+
+; Het tonen van het venster
+;(send mainframe show #t)
+;(send mainframe2 show #t)

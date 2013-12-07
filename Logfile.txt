@@ -1,0 +1,43 @@
+- 2013-12-07 13:51:30:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 14:27:51:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 14:27:52:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 14:31:13:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 14:31:14:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 14:41:13:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 14:41:16:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 14:42:08:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 14:42:14:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 14:44:22:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 14:44:23:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 14:44:33:  ADD: Device ' hallp ' added in Livingroom
+- 2013-12-07 14:44:33:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 14:44:46:  ADD: Device ' dsjlkj ' added in Livingroom
+- 2013-12-07 14:44:46:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 17:11:38:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:11:39:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 17:11:41:  DELETE: Device ' halle ' from  Livingroom Deleted
+- 2013-12-07 17:11:41:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 17:11:46:  ADD: Device ' klj ' added in Livingroom
+- 2013-12-07 17:11:46:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 17:14:28:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:33:51:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:36:00:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:36:43:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:37:27:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:38:50:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:38:51:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2013-12-07 17:47:49:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:47:51:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2013-12-07 17:48:52:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:48:54:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2013-12-07 17:50:08:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:50:10:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2013-12-07 17:54:48:  LOGIN FAILED: You Failed to logged in with admin
+- 2013-12-07 17:54:51:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:54:54:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2013-12-07 17:55:57:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 17:55:58:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2013-12-07 18:01:35:  LOGIN FAILED: You Failed to logged in with admin
+- 2013-12-07 18:01:38:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2013-12-07 18:01:41:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2013-12-07 18:01:54:  UPDATE STATUS: Status of devices of steward at Livingroom updated

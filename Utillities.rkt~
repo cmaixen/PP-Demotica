@@ -1,1 +1,28 @@
 #lang racket
+
+
+(#%provide send
+           list_size)
+
+;Hulpprocedures
+;--------------
+; Zend een boodschap (met eventuele parameters) naar een object georiëenteerd gebaseerde implementatie van een ADT.
+
+(define (send object message . parameters)
+  (let ((procedure (object message))) 
+    ;Er van uit gaande dat het object zijn dispatcher altijd een procedure teruggeeft.
+    (apply procedure parameters)))
+
+
+
+;Berekent de lengte van een lijst
+
+(define (list_size lst)
+  
+  (define (loop lst counter)
+    
+    (cond  ((empty? lst) 0)
+           ((empty? (cdr lst)) counter )
+       
+           (else  (loop (cdr lst) (+ counter 1)))))
+  (loop lst 1))
