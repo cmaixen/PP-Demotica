@@ -1,0 +1,70 @@
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*                                                                 *-*-
+;-*-*            Domotica Energie Monitoring Systeem                  *-*-
+;-*-*                        Yannick Merckx                           *-*-
+;-*-* Programmeerproject 2013-2014 2de Bachelor Computerwetenschappen *-*-
+;-*-*           Student van Vrije Universiteit Brussel                *-*-
+;-*-*                                                                 *-*-
+;-*-*                                                                 *-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+; Beschrijving: ADT GUI_Graphtab ; Argumenten: Majordomo-object, GUI-object
+;               Het ADT is een voorgeschreven panel met dat grafieken weergeeft over de toestellen
+;
+; Output: gui_graph object
+;
+; Messages:
+;
+; - get-graphtab: argumenten: geen
+;          output: panel%
+;
+; Commentaar: geen
+
+#lang racket
+(require racket/gui/base)
+(require plot)
+(#%require (prefix util: "Utillities.rkt"))
+(#%require "GUI_utillities.rkt")
+(provide make_GUI_graphtab)
+
+
+(define (make_GUI_graphtab GUI)
+  
+  
+  (define (get-graphtab) graphtab)
+  
+  (define graphtab (new vertical-panel% 
+                      [parent (util:send GUI 'get-tabpanel)]
+                      [alignment (list 'center 'center)]
+                      ))
+  
+  (define graph (new canvas%	 
+                     [parent graphtab]
+    [paint-callback
+     (lambda (canvas dc)
+       (plot/dc (lines
+              (reverse
+               (for/fold ([lst (list (vector 0 0))]) ([i  (in-range 1 200 )])
+                 (match-define (vector x y) (first lst))
+                 (cons (vector i (+ y (* 1/100 (- (random) 1/2)))) lst)))
+              #:color 6 #:label "Random walk")
+                dc
+                
+                1
+                1
+                
+                400
+                400
+                ))]))
+  
+  
+  (define (dispatch message)
+    (case message 
+      ((get-graphtab) get-graphtab)
+      (else (error 'graphtab "unknown message ~a" message))))
+  
+  dispatch
+  )
+

@@ -1,0 +1,57 @@
+#lang racket
+(require racket/gui/base)
+(#%require (prefix util: "Utillities.rkt"))
+(#%require "GUI_utillities.rkt")
+(provide make_GUI_maptab)
+
+  
+    ;TAB 3 / MAP
+    ;-----------
+(define (make_GUI_maptab GUI)
+    
+    (define tab3 (new vertical-panel% 
+                      [parent tab-panel]
+                      [alignment (list 'center 'center)]
+                      ))
+    
+    
+    
+    
+    ;  (make-object bitmap% "/Users/yannickmerckx/Desktop/white-house-floor-plans.jpg")
+    ;  (new bitmap-dc% [bitmap object]) ))
+    
+    
+    ;plattegrond
+    
+    (define plattegrond (make-object bitmap% "/Users/yannickmerckx/Desktop/white-house-floor-plans.jpg"))
+    (define plat-dc
+      (new bitmap-dc% [bitmap plattegrond])) 
+
+    
+    ;definieren van Bitmap
+    (define object (make-object bitmap% 
+                     
+                     100
+                     20
+                     
+                     ))
+    
+    (define object-dc
+      (new bitmap-dc% [bitmap object]) )
+    
+    (send object-dc set-scale 1 1)
+    (send object-dc set-text-foreground "black")
+    (send object-dc draw-text "press this button" 0 0)
+    (send object-dc set-smoothing 'aligned)
+    
+  
+    
+    
+    
+  (define (dispatch message)
+    (case message 
+      ((get-maptab) get-maptab)
+      (else (error 'maptab "unknown message ~a" message))))
+  
+  dispatch
+ )

@@ -1,0 +1,31 @@
+#lang racket
+(require racket/gui/base)
+(#%require (prefix util: "Utillities.rkt"))
+
+(define (make-dialog GUI titel callback . arg)
+  
+     ;dialoog   
+    (define dialog (new dialog% [parent (util:send GUI 'get-mainframe)] 
+                            [label titel]))
+    
+    
+    ;verticaal paneel voor dialoog
+    (define dialog_panel (new vertical-panel% [parent dialog]
+                                  [min-width 400]
+                                  [alignment '(center center)]
+                                  [min-height 40]))                                  
+  
+  
+(define (initialize)
+ (define (loop arg)
+   (if (empty? arg)
+       'done
+       (send (car arg) set-parent dialog_panel)))
+    (loop arg))
+        
+                
+         (define (dispatch message)
+           (case message 
+             ((show) (show-dialog))
+             (else (error 'dialog "unknown message ~a" message))))
+  dispatch)

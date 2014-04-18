@@ -1,11 +1,56 @@
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*                                                                 *-*-
+;-*-*            Domotica Energie Monitoring Systeem                  *-*-
+;-*-*                        Yannick Merckx                           *-*-
+;-*-* Programmeerproject 2013-2014 2de Bachelor Computerwetenschappen *-*-
+;-*-*           Student from Vrije Universiteit Brussel               *-*-
+;-*-*                                                                 *-*-
+;-*-*                                                                 *-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+; Beschrijving: ADT Logsystem; Argumenten: geen
+; Output: Logsytem object
+; Messages:
+
+; - add-device:  argumenten: naam van toestel (string?) , locatie van het toestel (string?)
+;                output: void
+
+; - delete-device: argumenten: naam van toestel (string?) , locatie van het toestel (string?)
+;                  output: void
+
+; - status-update: argumenten: locatie van het toestel (string?)
+;                  output: tab-panel%
+
+; - succesfull-login: argumenten: username (string?)
+;                     output: void
+
+; - failed-login: argumenten: username (string?)
+;                 output: void
+
+; - change-mesurement: argumenten: locatie van het toestel (string?),  naam van toestel (string?), de waarde (string?)
+;                      output: void
+
+; - device-on: argumenten: locatie van het toestel (string?), naam van toestel (string?) 
+;              output: void
+
+; - device-off: argumenten: locatie van het toestel (string?), naam van toestel (string?) 
+;               output: void
+;
+;
+; Commentaar: /
+
 #lang racket
 
 (require racket/date)
 (#%require "Utillities.rkt")
 (provide make-logsystem)
 
+
+
 (define (make-logsystem)
-  (let ((adress-logfile "/Users/yannickmerckx/Dropbox/Unif/2de bachelor/Programmeerproject 2/PP-Demotica/Logfile.txt"))
+  (let ((adress-logfile "Sources/Logfile.txt"))
     
     ;instellingen:
     
@@ -27,7 +72,6 @@
     
     ;schrijven van update logs
     
-    
     (define (status-update location)
     (write-log (~a "UPDATE STATUS: Status of devices of steward at" location "updated" #:separator " ")))
     
@@ -41,6 +85,19 @@
     (define (failed-login username)
       (write-log (~a "LOGIN FAILED: You Failed to logged in with" username #:separator " ")))
     
+    ;schrijven van change logs
+    
+    (define (change-mesurement location name value)
+       (write-log (~a "CHANGE: Device" " " name " " "at location" " " location " " "changed in " value )))
+    
+    
+    ;schrijven van status logs
+    
+    (define (device-on location name)
+       (write-log (~a "CHANGE: Device" " " name " " "at location" " " location " " "TURNED ON " )))
+    (define (device-off location name)
+       (write-log (~a "CHANGE: Device" " " name " " "at location" " " location " " "TURNED OFF " )))
+      
     
     ;private: 
     
@@ -60,14 +117,13 @@
         ((status-update) status-update)
         ((succesfull-login) succesfull-login)
         ((failed-login) failed-login)
+        ((change-mesurement) change-mesurement)
+        ((device-on) device-on)
+        ((device-off) device-off)
         (else (error 'logsystem  "unknown message ~a" message))))
     
     
     dispatch))
-  
-  
-  
-  (define log (make-logsystem))
   
   
   

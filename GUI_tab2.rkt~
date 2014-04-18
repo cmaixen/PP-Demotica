@@ -1,0 +1,138 @@
+#lang racket
+
+(#%require (prefix util: "Utillities.rkt"))
+(#%require "GUI_utillities.rkt")
+(provide make_GUI_tab2)
+   ;TAB 2 / DEVICES
+    ;---------------
+    
+    ;Locatie moet nog geregeld worden het best is dat dit ook in een database wordt bijgehouden
+    ;in overweging moet er de status bijgehouden worden in database zodat het altijd mogelijk is om "offline" de status de zien hierbij wordt ook de "timestamp interessanter
+    ;personalized  info over ieder object => eigen logfile  ; meer info : wie allemaal toegang totaal energiegebruik , gemiddelde blabla, soort van profielbeschrijving
+    ;database met logfile adressen zodanig dat elke object eraan kan.
+
+
+(define (make_GUI_tab2 GUI)
+  (let ((mainframe (util:send GUI 'get-mainframe))
+       
+    
+    (define tab2 (new vertical-panel%
+                      [parent tab-panel]
+                      [alignment (list 'center 'center)]
+                      ))
+    
+      (define add_button (new button% [parent tab-panel ] [label "Add"] [callback (lambda (button click) (send add-dialog show #t))]))
+    
+    ;ADD-Dialog
+    
+      
+    
+   (define add-dialog (new dialog% [parent mainframe] 
+                            [label "Add-Dialog"]))
+    
+    
+    (define add-dialog_panel (new vertical-panel% [parent add-dialog]
+                                  [min-width 400]
+                                 [alignment '(center center)]
+                                 [min-height 40]))
+    
+     (define name_device (new text-field% [parent add-dialog_panel] [label "Name"]))
+    (define type (new choice% [parent add-dialog_panel] [label "Type"] [choices listdevices] ))
+   (define serial (new text-field% [parent add-dialog_panel] [label "Serialnumber"]))
+    (define com-adress (new text-field% [parent add-dialog_panel] [label "COM-adres"]))
+      
+    
+    (define add_button-dialog (new button% [parent add-dialog ] [label "Add"] [callback (lambda (button click) (send add-dialog show #f)
+                                                                                          (util:send current-steward 'add-device
+                                                                                                  (determine-choice listdevices (send type get-selection))
+                                                                                                     (send (send name_device get-editor) get-text)
+                                                                                                     (send (send serial get-editor) get-text)
+                                                                                                     (send (send com-adress get-editor) get-text))
+                                                                                         (update-list-box-tab2 current-listbox))]))
+    
+    (define delete_button (new button% [parent tab-panel ] [label "Delete"] [callback (lambda (button click)
+                                                                                        
+                                                                                        (util:send get-current-steward 'delete_device (send current-listbox get-string-selection))
+                                                                                        
+                                                                                        (update-list-box-tab2 current-listbox))]))
+     ;algmene functie 
+   (define (determine-choice lst selection)
+     (define (loop lst counter)
+       (let ((choice (car lst)))
+         (if (= counter selection)
+             choice
+             (loop (cdr lst) (+ counter 1)))))
+     (if (< (util:list_size lst) selection)
+         (error 'determine-choice-function "Selection is out of range of the list!")
+         (loop lst 0)))
+    
+   
+    
+   ;!!!! HOGERE ORDE FUNCTIE IS HIER MOGELIJK! MOET NOG AANGEPAST WORDEN!!!!!!
+    
+        (define (list-box-tab2 string type) 
+          (new list-box%
+                                   (label string)
+                                   (parent tab-panel)
+                                   (choices '())
+                                   (style (list 'single
+                                                'column-headers))
+                                   (columns (list "Name"
+                                                  "Status"
+                                                  "Location"
+                                                  "Serial"
+                                                  "Last Update"
+                                                  ))))
+      ;creeren van listboxen
+    
+    (define list-box-lightswitch (list-box-tab2 "Lightswitch" "Lightswitch" ))
+    (define list-box-tempsensor (list-box-tab2 "Temperaturesensor" "Temperaturesensor"  ))
+    
+    
+     ;creeeren van knoppen tab2
+    
+        (define (buttongenerator-tab2 lst destination tab)
+      (cond ( (empty? lst)
+              (display "done"))
+            ((not (equal? (util:list_size lst) (util:list_size destination))) (error 'buttongenerator-roomtab "labellist and destination list  are not of the same size"))
+            
+            (else (let ((name (car lst))
+                        (dest (car destination)))
+                    (new button% [parent tab] [label name]
+                         [vert-margin 20]	
+                         [horiz-margin 20]	 
+                         [min-width 20]	 
+                         [min-height 20]
+                         [callback (lambda (button click) (send tab-panel change-children (lambda (x) (list dest add_button delete_button)))
+                                     (set! current-listbox dest)
+                              (set! current-steward (get-steward "Bathroom"))
+                                     (update-list-box-tab2 dest name))])
+                    (buttongenerator-tab2 (cdr lst) (cdr destination) tab)))))
+    
+        (define (update-list-box-tab2 lst-box type)
+      (let ((namelst (util:send current-steward 'list_devices_names type ))
+            
+            (statuslst (util:send current-steward 'list_devices_status type))
+            (seriallst (util:send current-steward 'list_devices_serial type))
+            (com-adresslst (util:send current-steward 'list_devices_com_adress type)))
+        (display namelst)
+        (display statuslst)
+        (display seriallst)
+        (display com-adresslst)
+        
+        (send lst-box set namelst statuslst statuslst seriallst com-adresslst)))
+    
+    
+                    
+    
+    (buttongenerator-tab2 listdevices (list list-box-lightswitch list-box-tempsensor) tab2)
+  
+ 
+  (define (dispatch message)
+    (case message
+      ((get-tab2) get-tab2)
+      (else (error 'tab2 "unknown message ~a" message)))))
+
+dispatch))
+  
+  

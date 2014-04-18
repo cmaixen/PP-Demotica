@@ -1,0 +1,18 @@
+#lang racket
+
+(#%require (prefix util: "Utillities.rkt"))
+
+
+    ;beslissen welke keuze je moet teruggeven bij een keuzeobject
+    
+    ;algmene functie 
+   (define (determine-choice lst selection)
+     (define (loop lst counter)
+       (let ((choice (car lst)))
+         (if (= counter selection)
+             choice
+             (loop (cdr lst) (+ counter 1)))))
+     (if (< (util:list_size lst) selection)
+         (error 'determine-choice-function "Selection is out of range of the list!")
+         (loop lst 0)))
+    

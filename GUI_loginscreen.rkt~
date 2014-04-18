@@ -1,0 +1,75 @@
+#lang racket
+(require racket/gui/base)
+(#%require (prefix util: "Utillities.rkt"))
+
+(define (create-loginscreen)
+  
+  (define (get-loginscreen GUI)
+    dialog)
+  
+
+ ; Create a dialog
+    (define dialog (new dialog% [parent (util:send GUI 'get-mainframe)] 
+                        [label "Dialog"]))
+    
+    
+    
+    
+    (define dialog_panel (new vertical-panel% [parent dialog]
+                              [min-width 100]
+                              [alignment '(center center)]
+                              [min-height 40]))
+    
+    (define Button_panel (new horizontal-panel% [parent dialog]
+                              [alignment '(center center)]
+                              [min-width 100] 
+                              [min-height 20 ]))
+    
+    ; Add a text field to the dialog
+    
+    (define message (new message%	 
+                         [label "Welcome"]	 
+                         [parent dialog_panel]
+                         [enabled #t]	   	 	 
+                         [min-width 100]	 
+                         [min-height 20]	 
+                         [auto-resize #t]))
+    
+    
+    
+    ;Textfields login
+    
+    
+    (define username_input (new text-field% [parent dialog_panel] [label "Username"]))
+    (define password_input (new text-field% [parent dialog_panel] [style '(single password)] [label "Password "]))
+    
+    
+    ; Add Cancel and Ok buttons to the horizontal panel
+    
+    (define button-login (new button% [parent  Button_panel ] [label "Login"] [callback (lambda (button-cancel click)
+                                                                                          (print (user_check (send (send username_input get-editor) get-text)))
+                                                                                          (if (check_login (send (send username_input get-editor) get-text) (send (send password_input get-editor) get-text) )
+                                                                                              (begin (send dialog show #f) 
+                                                                                                     (send mainframe set-label "Welcome to your personal Electricity Home Monitoring System"))
+                                                                                              (send message set-label "Wrong Username/Password"))
+                                                                                          
+                                                                                          )]))
+    
+    (define button-cancel (new button% [parent  Button_panel ] [label "Cancel"] [callback
+                                                                                 (lambda (button-cancel click)
+                                                                                   (send dialog show #f)
+                                                                                   (send mainframe on-exit)
+                                                                                   
+                                                                                   )]))
+    
+    
+    
+  (define (dispatch message)
+    (case message
+      ((get-loginscreen) get-loginscreen))
+    (else (error 'tab1 "unknown message ~a" message)))
+  
+  dispatch
+  )
+   
+    

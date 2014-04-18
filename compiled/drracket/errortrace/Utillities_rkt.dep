@@ -1,1 +1,1 @@
-("5.3.1" ("df01632aa686ce2dae18ebde7aba95c66fb23642" . "993a5aadca60a03721541defffb3a2ca1f15421b") (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"lang" #"reader.rkt"))
+("5.3.1" ("ee22c79804f38be49806d030b84879fcaffa2576" . "01b591ae69b0ba8c833d64b827edf2c9eb10a107") #"/Users/yannickmerckx/Dropbox/Unif/2de bachelor/Programmeerproject 2/PP-Demotica/Constants.rkt" (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"lang" #"reader.rkt"))

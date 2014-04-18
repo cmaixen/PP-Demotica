@@ -1,10 +1,42 @@
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*                                                                 *-*-
+;-*-*            Domotica Energie Monitoring Systeem                  *-*-
+;-*-*                        Yannick Merckx                           *-*-
+;-*-* Programmeerproject 2013-2014 2de Bachelor Computerwetenschappen *-*-
+;-*-*           Student van Vrije Universiteit Brussel                *-*-
+;-*-*                                                                 *-*-
+;-*-*                                                                 *-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+
+; Beschrijving: Deze file bevat hulpprocedures die over heel het programmma worden gebruikt.
+
+; Procedures:
+
+; - send: argumenten: object (een object, in realiteit is dit een dipatch-procedure), message (de boodschap je wil sturen naar het object)(symbol)
+;         output: any (resultaat van boodschap aan object)
+
+; - list_size: argumenten: lijst (pair)
+;              output: number (de grootte van de lijst)
+
+; - list_neutralizer: argumenten: query (query die een resultaatlijst teruggeeft met vectors daarin), element (number)(positie van de kolom waar je de informatie uitwilt) 
+;                     output: (listof string? ...) (lijst met de gevraagde element in)
+
+; - reverse-list:    argumenten: lijst (pair)
+;                     output: geeft de omgekeerde lijst terug
+
+
+; - list_devices_spectype:  procedure is een generaliserende functie om duplicatie te vermijden
+;                           argumenten: list_w_stewards (listof steward-object ...),  type (string) (duidt op het type van toestellen dat je wil) message (de boodschap))  
+;                           Output: (listof string?) (lijst met de gevraagde informate van alle toestellen van het gegeven type)
+
+
+; Commentaar: geen
+
 #lang racket
-
-
-(#%provide send
-           list_size
-           list_neutralizer
-           reverse-list)
+(#%require "Constants.rkt")
+(provide (all-defined-out))
 
 ;Hulpprocedures
 ;--------------
@@ -49,3 +81,22 @@
   (loop lst '()))
 
 
+    ;procedure bepaalt welke standaardwaarde er moet gegeven  worden
+(define (mesurement_default type)
+  (if (equal? type temperaturesensor_type)
+      temperaturesensor_default_value
+      lightswitch_default_value))
+
+
+;generieke functie om stewardoverschrijdend informatie op te vragen 
+
+;VEREISTEN! MESSAGE MOET EEN LITERAL ZIJN!
+
+  (define (list_devices_spectype list_w_stewards type message)
+     (define (loop stewardlist result)
+       (if (empty? stewardlist)
+       result
+       (let ((first-steward (car stewardlist)))
+       
+      (loop (cdr stewardlist) (append result (send first-steward message type))))))
+      (loop list_w_stewards '()))
