@@ -47,6 +47,7 @@
 (require db)
 (#%require "Logsystem.rkt")
 (#%require "Constants.rkt")
+(#%provide make-majordomo)
 
 (define  (make-majordomo) 
   (let* ((db (sqlite3-connect  #:database db-pad
@@ -74,7 +75,7 @@
     (define  (initialize_majordomo)
       (define (loop lst)
         (if (empty? lst)
-            (display "initialization done")   
+            'done  
             (let* ((devicevector (car lst))
                    (location (vector-ref devicevector steward_table_locationcolummn))
                    (steward-database (vector-ref devicevector steward_table_steward_database_column)))
@@ -165,9 +166,9 @@
                  (do ([i 1 (+ i 1)])
                    ((= i 0) (print "done"))
                    
-                   (sleep 2)
+                   (sleep light-graph-sleep)
                    (print "thread called")
-                   (let* ((file "graph-light")
+                   (let* ((file light-graph-file)
                           (input (open-input-file file))
                           (old-lst-data (read input))
                           (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards lightswitch_type 'list_devices_mesurement)))
@@ -183,9 +184,9 @@
                  (do ([i 1 (+ i 1)])
                    ((= i 0) (print "done"))
                    
-                   (sleep 3)
+                   (sleep temp-graph-sleep)
                    (print "thread2 called")
-                   (let* ((file "graph-temp")
+                   (let* ((file temp-graph-file)
                           (input (open-input-file file))
                           (old-lst-data (read input))
                           (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards temperaturesensor_type 'list_devices_mesurement)))
@@ -198,5 +199,4 @@
     dispatch))
 
 
-
-(send (make-majordomo) 'start)                     
+                  

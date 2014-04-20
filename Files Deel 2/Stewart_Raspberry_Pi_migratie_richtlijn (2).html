@@ -1,0 +1,34 @@
+<p>
+	&nbsp;</p>
+<h2 class="p1">
+	<span class="s1">Stewart Raspberry Pi migratie richtlijn:</span></h2>
+<h4 class="p1">
+	<span class="s1">1. Stewart isolatie</span></h4>
+<p class="p1">
+	Herwerk je broncode zodat alle oproepen en andere interacties tussen de Majordomo en Stewart functionaliteiten via een Scheme &lsquo;port&rsquo; plaatsvinden. Zet hierbij ook al je Stewart broncode in een apart Scheme bestand. Je kan gerust gebruik maken van de Racket&nbsp;<span style="font-family: 'courier new', courier, monospace;"><span class="s2">(make-pipe)</span>&nbsp;</span>functie. Een voorbeeld gebruik van deze functie kan je vinden in de voorbeeldcode map op Pointcarr&eacute;.</p>
+<p class="p2">
+	&nbsp;</p>
+<h4 class="p1">
+	<span class="s1">2. Stewart opkuis</span></h4>
+<p class="p1">
+	Zet de broncode van de Stewart om in R5RS Scheme, door bijvoorbeeld &lsquo;<span class="s2">#lang racket</span>&rsquo; te vervangen met &lsquo;<span style="font-family: 'courier new', courier, monospace;">#lang r5rs</span>&rsquo;. De enige niet-R5RS en Racket-specifieke code die je op dit punt mag gebruiken is &lsquo;<span style="font-family: 'courier new', courier, monospace;"><span class="s2">make-pipe</span>&rsquo;</span>, die je door middel van &lsquo;<span style="font-family: 'courier new', courier, monospace;">(<span class="s2">#%require racket/tcp)</span></span>&rsquo; nog kan importeren.</p>
+<p class="p2">
+	&nbsp;</p>
+<h4 class="p1">
+	<span class="s1">3. Stewart netwerking</span></h4>
+<p class="p1">
+	In plaats van de communicatie tussen de Stewart en Majordomo over een &lsquo;<span style="font-family: 'courier new', courier, monospace;">make-pipe</span>&rsquo; I/O port te laten gebeuren, verander je dit nu met TCP netwerk poorten. Gebruik de&nbsp;<span style="font-family: 'courier new', courier, monospace;">tcp-listen</span>,&nbsp;<span style="font-family: 'courier new', courier, monospace;"><span class="s2">tcp-accept</span>&nbsp;</span>en&nbsp;<span style="font-family: 'courier new', courier, monospace;"><span class="s2">tcp-connect</span>&nbsp;</span>functies om een Scheme in en output port aan te maken. Voorbeeldcode hiervan kan je vinden op Pointcarr&eacute;.</p>
+<p class="p1">
+	Opgepast, TCP/IP is een synchroon protocol, waarbij &lsquo;<span style="font-family: 'courier new', courier, monospace;">read</span>&rsquo; blijft wachten tot hij een bericht ontvangen heeft. Je kan dus in situaties terechtkomen waar je programma hierdoor blijft hangen. De TCP input en output poorten zijn ook gebufferd. Dit heeft als gevolg dat pas na een aantal characters de berichten zullen verzonden en ontvangen worden. Je kan Scheme forceren van een geschreven bericht onmiddellijk te verzenden, door gebruik te maken van de functie&nbsp;<span style="font-family: 'courier new', courier, monospace;">flush-output</span>. Een andere reden waarom &lsquo;<span style="font-family: 'courier new', courier, monospace;">read</span>&rsquo; onverwachts kan hangen is bij het gebruiken van &lsquo;read&rsquo; en &lsquo;<span style="font-family: 'courier new', courier, monospace;">write</span>&rsquo; voor het versturen van S-Expressies: Racket stuurt pas een s-expressie door als deze be&euml;indigd wordt met een&nbsp;<span class="s2">newline</span>.</p>
+<p class="p1">
+	Als je programma op een &lsquo;<span style="font-family: 'courier new', courier, monospace;">read</span>&rsquo; blijft hangen, kijk even na of je in volgorde:</p>
+<p class="p1">
+	a) de S-expressie berichten be&euml;indigd met een &lsquo;<span style="font-family: 'courier new', courier, monospace;">(newline &lt;out-port&gt;)</span>&rsquo;&nbsp;</p>
+<p class="p1">
+	a) je de output buffer &lsquo;flusht&rsquo; door gebruik te maken van de functie:&nbsp;<span style="font-family: 'courier new', courier, monospace;">(flush-output &lt;out-port&gt;)&nbsp;</span>&nbsp;deze functie zal ook aanwezig zijn in de Slip implementatie.</p>
+<h4 class="p1">
+	&nbsp;</h4>
+<h4 class="p1">
+	<span class="s1">4. Stewart deployment</span></h4>
+<p class="p1">
+	Voor je dit doet, zorg dat de netwerk connectie op je Raspberry Pi fatsoenlijk geconfigureerd is. Installeer Racket (bv. op de command line met het commando:&nbsp;<span style="font-family: 'courier new', courier, monospace;">sudo apt-get install racket</span>)Plaats je Stewart broncode op de Raspberry Pi en test deze met Racket.</p>
