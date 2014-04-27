@@ -1,7 +1,5 @@
 #lang racket
 
-
-
 (define in '())
 (define out '())
 (define lst (tcp-listen 6666))
@@ -10,11 +8,11 @@
   (set! out po))
 
 ; 1. 
-(write "Connected!" out)
+(write "Hello!" out)
 (flush-output out)
 
 ; 2.
-(define (majordomo)
+(define (server)
   (write '(begin 
             (write ID out)
             (newline out)
@@ -25,9 +23,3 @@
   (read in))
 
 ; (server) ; run this in the REPL, then run (client)
-
-
-
-
-
-

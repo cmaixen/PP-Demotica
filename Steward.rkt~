@@ -232,7 +232,6 @@
       lightswitch_default_value))
     
     (define (add-device type name serialnumber com-adress)
-      (print name)
       ;apparaat in database toevoegen 
       ;je mag geen veld oplaten!
       (cond ((not (and (non-empty-string? name)  (non-empty-string? serialnumber) (non-empty-string? com-adress)))
@@ -260,7 +259,7 @@
     
     
 
-    ;naam verkrijgen kan nog via protocol van porten gaan, maar aangezien we hier toch aan het simuleren zijn, speelt dit op de moment geen rol
+    ;naam verkrijgen kan nog via protocol van poorten gaan, maar aangezien we hier toch aan het simuleren zijn, speelt dit op de moment geen rol
     ;In de latere fase wordt dit nog aangepast
     (define (look-up-device name arg) 
       (define (loop lst)
@@ -328,7 +327,7 @@
     (define (initialize device_list)
       (define (loop lst)
         (if (empty? lst)
-            (display "initialization done")
+            'done
             (let* ((devicevector (car lst))
                    (device_name (vector-ref devicevector device_table_name_column))
                    (device_serial (vector-ref devicevector device_table_serial_column))

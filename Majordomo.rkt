@@ -1,4 +1,4 @@
-;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+ ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 ;-*-*                                                                 *-*-
 ;-*-*            Domotica Energie Monitoring Systeem                  *-*-
@@ -43,8 +43,8 @@
 #lang racket
 (#%require  "Utillities.rkt")
 (#%require "GUI.rkt") 
-(#%require "Steward.rkt")
 (require db)
+(#%require "Steward.rkt")
 (#%require "Logsystem.rkt")
 (#%require "Constants.rkt")
 (require unstable/contract)
@@ -59,6 +59,27 @@
          (logsystem (make-logsystem))
          (listrooms (list_neutralizer (query-rows db "select location from the_stewards") steward_table_locationcolummn))
          (listdevices (list lightswitch_type temperaturesensor_type)))
+    
+   
+        
+    ;SENDING OVER TCP/IP
+    ;RETURN: ANY
+    (define (send-over-tcp message steward . type)
+      (let* ((in '())
+             (out '())
+             (ip (get_ip steward))
+             (port (get_port steward)))
+        (let-values ([(pi po) (tcp-connect ip port)])
+          (display "Connecting with ip ....")
+          (newline)
+          (set! in pi)
+          (set! out po))
+        (display (read in))
+        (write message
+               out)
+        (flush-output out)
+        (newline)    
+        (acknowledged (read in))))
     
     
     ;starten van programma
@@ -82,11 +103,21 @@
             'done  
             (let* ((devicevector (car lst))
                    (location (vector-ref devicevector steward_table_locationcolummn))
-                   (steward-database (vector-ref devicevector steward_table_steward_database_column)))
-              (set! list_w_stewards (cons (make-steward dispatch location logsystem steward-database) list_w_stewards))
-              
+                   (steward-database (vector-ref devicevector steward_table_steward_database_column))
+                   (ip (vector-ref devicevector steward_table_ip_column))
+                   (port (vector-ref devicevector steward_table_port_column)) 
+                   (serveradress (cons ip port)))                
+              (set! list_w_stewards (cons (make_steward_info location ip port steward-database) list_w_stewards))
               (loop (cdr lst)))))
       (loop (query-rows db "select * from the_stewards")))
+    
+    (define (make_steward_info location ip port steward_database)
+      (let ((new_steward (cons location (cons (cons ip port) steward_database)))
+           (stewardinfo (query-rows db (format "select * from ~a" steward_database))))
+        (display location)
+      ;  (send-over-tcp `(initialize-steward ,new_steward))
+        (display (send-over-tcp `(initialize-steward ,stewardinfo) new_steward))
+        new_steward))
     
     
     ;geeft de steward terug op de overeenkomstige locatie 
@@ -97,7 +128,7 @@
         (if (empty? lst)
             (error 'search "steward -> ~a not found" locationname)
             (let* ((first_steward (car lst))
-                   (location (send first_steward 'get-location)))
+                   (location (get_location first_steward)))
               (if (equal? location locationname)
                   first_steward
                   (search (cdr lst))))))
@@ -110,6 +141,17 @@
     ;geeft de huidige steward waar je mee aan het werken ben terug
     (define (get-current-steward)
       current-steward)
+    
+    ;geeft locatie/naam van de steward. locatie en naam zijn hetrzelfde
+    (define (get_location steward)
+      (car steward))
+    
+ 
+    
+    ;geeft database (de naam ervan) terug
+    (define (get_steward_db steward)
+      (cddr steward))
+    
     
     ;geeft de databaconnectie door
     (define (get-db)
@@ -136,8 +178,8 @@
     
     
     ;de huidige steward veranderen in de gegeven
-    (define (set-current-steward new-steward)
-      (set! current-steward new-steward))
+    (define (set-current-steward steward)
+     (set! current-steward  steward))
     
     ;verwacht lijst met nummers
     (define (calculate-average-from-numberlist list)
@@ -152,43 +194,46 @@
     
     ;MUTATOREN STEWARD
     ;-----------------
-    (define location "testlocation")
-    (define (delete_device_current_steward device-name)
-      (let ((steward-database (cddr current-steward))
-            (steward-adress (cdar current-steward)))
-        (;uit database verwijderen
+    
+    
+    (define (delete_device device-name steward)
+      (let ((steward-database (get_steward_db steward))
+            (location (get_location steward)))
+        ;uit database verwijderen
          (query-exec db (format "DELETE from ~a where name = $1" steward-database) device-name)
-         ;NOT IMPLEMENTED YET
-         (send-over-tcp `(delete_device ,device-name))
+
+         (send-over-tcp `(delete_device ,device-name) steward)
          ;update logfile
          ;location moet er nog bij
-         (send logsystem 'delete-device device-name location))))              
+         (send logsystem 'delete-device device-name location)))              
     
     
     (define (change_mesurement_current_steward name value)
-      (let ((steward-database (cddr current-steward)))
+      (let ((steward-database (get_steward_db current-steward))
+            (location (get_location current-steward)))
         ;in database veranderen
-        ((query-exec db (format "update ~a set mesurement = $1 where name = $2" steward-database)  value name)
-         ;NOT IMPLEMETED YET
-         (send-over-tcp `(change-mesurement ,value))
+        (query-exec db (format "update ~a set mesurement = $1 where name = $2" steward-database)  value name)
+         (send-over-tcp `(change-mesurement ,name ,value) current-steward)
          ;update logfile
-         (send logsystem 'change-mesurement location name value))))
+         (send logsystem 'change-mesurement location name value)))
     
     (define (change_status_current_device name value)
-      (let ((steward-database (cddr current-steward)))
+      (let ((steward-database (get_steward_db current-steward))
+            (location (get_location current-steward)))
         (if value
             (begin
-              (send-over-tcp `(change-status status "on"))
+              (send-over-tcp `(change-status ,name "on") current-steward)
               (query-exec db (format "update ~a set status = $1 where name = $2" steward-database)  "on" name))
             (begin
-              (send-over-tcp `(change-status status "off"))
+              (send-over-tcp `(change-status ,name "off") current-steward)
               (query-exec db (format "update ~a set status = $1 where name = $2" steward-database)  "off" name)))
         (if value
             (send logsystem 'device-on location name)
             (send logsystem 'device-off location name))))
     
     (define (add-device type name serialnumber com-adress)
-      (let ((steward-database (cddr current-steward)))
+      (let ((steward-database (get_steward_db current-steward))
+            (location (get_location current-steward)))
         ;apparaat in database toevoegen 
         ;je mag geen veld oplaten!
         (cond ((not (and (non-empty-string? name)  (non-empty-string? serialnumber) (non-empty-string? com-adress)))
@@ -201,8 +246,8 @@
                (error 'steward "communicationadress must be unique!"))
               (else
                (query-exec db (format "insert into ~a values ($1, $2 , $3 , $4, $5, $6)" steward-database) name serialnumber com-adress type status_default_value (mesurement_default type))
-               ;NOT IMPLEMENTED YET
-               (send-over-tcp '(update-devices ,type ,name ,serialnumber ,status_default_value ,(mesurement_default type) ))
+     
+               (send-over-tcp `(add-device ,type ,name ,serialnumber ,com-adress) current-steward)
                (send logsystem 'add-device name location)))))
     
     ;ACCESSOREN STEWARD
@@ -210,7 +255,7 @@
     
     ;algemene functie
     (define (list_devices_info_from_db  position . type)
-      (let ((steward-database (cddr current-steward)))
+      (let ((steward-database (get_steward_db current-steward)))
         (if (empty? (car type))
             (list_neutralizer (query-rows db (format "select * from ~a" steward-database)) position)
             (list_neutralizer (query-rows db  (format "select * from ~a where type = $1" steward-database) (caar type)) position))))
@@ -228,57 +273,61 @@
       (list_devices_info_from_db  device_table_type_column  type))
     
     ;onrechtstreeks via steward aan devices info vragen
-    ;NOT IMPLMENTED YET
+  
     (define (list_devices_status . type)
+      (let ((location (get_location current-steward)))
       (send logsystem 'status-update location)
+      
       (if (null? type)
-          (send-over-tcp `(list_devices_info_from_device 'status))
-          (send-over-tcp `(list_devices_info_from_device 'status ,(car type)))))
+          (send-over-tcp '(list_devices_status) current-steward)
+          (send-over-tcp `(list_devices_status ,(car type)) current-steward))))
     
     
     (define (list_devices_location . type)
       (if (null? type)
-          (send-over-tcp `(list_devices_info_from_device 'location))
-          (send-over-tcp `(list_devices_info_from_device 'location ,(car type)))))
+          (send-over-tcp '(list_devices_location) current-steward)
+          (send-over-tcp `(list_devices_location ,(car type)) current-steward)))
     
     
     (define (list_devices_mesurement . type)
       (if (null? type)
-          (send-over-tcp `(list_devices_info_from_device 'mesurement))
-          (send-over-tcp `(list_devices_info_from_device 'mesurement (car type)))))
+          (send-over-tcp '(list_devices_mesurement) current-steward)
+          (send-over-tcp `(list_devices_mesurement ,(car type)) current-steward)))
     
     
     (define (list_devices_mesurement_with_value . type)
       (if (null? type)
-          (send-over-tcp `(list_devices_info_from_device 'mesurement_w_v))
-          (send-over-tcp `(list_devices_info_from_device 'mesurement_w_v ,(car type)))))
+          (send-over-tcp '(list_devices_mesurement_with_value) current-steward)
+          (send-over-tcp `(list_devices_mesurement_with_value ,(car type)) current-steward)))
     
-    (define (dispatch message)
-      (case message
-        ((start) start)
-        ((get-steward) get-steward)
-        ((get-listrooms) get-listrooms)
-        ((get-listdevices) get-listdevices)
-        ((get-db) get-db)
-        ((get-list_w_stewards) get-list_w_stewards)
-        ((get-current-steward) get-current-steward)
-        ((set-current-steward) set-current-steward)
-        (else (error 'Majordomo "unknown message ~a" message
-                     
-                     ))))
+    (define (initialize-steward-list stewardlst)
+      (define (loop lst)
+        (if (empty? lst)
+            (begin
+              (display "steward-list is initialized")
+              (newline))
+            (let* ((steward (car lst))
+                   (steward-database (cddr steward))
+                   (stewardinfo (query-rows db (format "select * from ~a" steward-database))))
+              (set! current-steward steward)
+              ;send-over-tcp neemt altijd current steward om er nr toe te zenden, KUNNNEN WE NOG VERANDEREN
+              (send-over-tcp '(initialize-steward stewardinfo))
+              (loop (cdr lst)))))
+      (loop stewardlst))
+    
+
     (initialize_majordomo)
     
     ;thread die om het uur informatie wegschrijft naar de logfile wat het gemiddelde verbruik is
     (thread    (lambda () 
                  (do ([i 1 (+ i 1)])
                    ((= i 0) (print "done"))
-                   
                    (sleep light-graph-sleep)
                    (print "thread called")
                    (let* ((file light-graph-file)
                           (input (open-input-file file))
                           (old-lst-data (read input))
-                          (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards lightswitch_type 'list_devices_mesurement)))
+                          (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards lightswitch_type 'list_devices_mesurement dispatch)))
                           (new-data-list (cons new-value old-lst-data)))
                      (close-input-port input)
                      (let ((output (open-output-file file #:exists 'can-update)))
@@ -296,42 +345,46 @@
                    (let* ((file temp-graph-file)
                           (input (open-input-file file))
                           (old-lst-data (read input))
-                          (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards temperaturesensor_type 'list_devices_mesurement)))
+                          (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards temperaturesensor_type 'list_devices_mesurement dispatch)))
                           (new-data-list (cons new-value old-lst-data)))
                      (close-input-port input)
                      (let ((output (open-output-file file #:exists 'can-update)))
                        (write new-data-list output)
                        (close-output-port output))))))
+
     
-;SENDING OVER TCP/IP
-;RETURN: ANY
-(define (send-over-tcp message)
-  (let* ((in '())
-         (out '()))
-    ; (server-adress (cdar current-steward))
-    ;   (ip (car server-adress))
-    ;  (port (cdr server-adress)))
-   
-    (let-values ([(pi po) (tcp-connect "localhost" 6664)])
-      (display "Connecting with ip ....")
-      (newline)
-      (set! in pi)
-      (set! out po))
-(display (read in))
-    (write message
-           out)
-   (flush-output out)
-    
-    (newline)
-    
- (read in)))
+        (define (dispatch message)
+      (case message
+        ((start) start)
+        ((get-steward) get-steward)
+        ((get-listrooms) get-listrooms)
+        ((get-listdevices) get-listdevices)
+        ((get-db) get-db)
+        ((get-list_w_stewards) get-list_w_stewards)
+        ((get-current-steward) get-current-steward)
+        ((set-current-steward) set-current-steward)
+        ((delete_device) delete_device)
+        ((list_devices_names) list_devices_names_current_steward)
+        ((list_devices_serial) list_devices_serial_current_steward)
+        ((list_devices_com_adress) list_devices_com_adress_current_steward)
+        ((list_devices_type) list_devices_type_current_steward)
+        ((list_devices_status) list_devices_status)
+        ((list_devices_location) list_devices_location)
+        ((list_devices_mesurement) list_devices_mesurement)
+        ((list_devices_mesurement_with_value) list_devices_mesurement_with_value)
+        ((add-device) add-device)
+        ((change-mesurement) change_mesurement_current_steward)
+        ((change-status) change_status_current_device)
+        (else (error 'Majordomo "unknown message ~a" message))))
     
     dispatch))
 
 
-    
-    
-    
+
+
+
+;TO DO represent steward in list and database and make connection => needs to be done! 
+;GUI needs to be working
 
 
 ;(send-over-tcp '(add-device "test"))

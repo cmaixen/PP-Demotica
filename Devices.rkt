@@ -37,12 +37,12 @@
 
 (#%provide make-device)
 
-(define (make-device type name serialnumber steward given_status mesurement)
+(define (make-device type name serialnumber location given_status mesurement)
   (let-values ([(input output) (make-pipe)]  ;aanmaken van outputfile bij het aanmaken van het object 
                [(current-mesurement) mesurement]   ;je mag er vanuit gaan dat je eerst een outputport hebt aangezien je eerst wil schrijven 
                [(status) given_status]
                [(type) type]
-               [(location) (send steward 'get-location)]
+               [(location) location]
                [(unit_of_value) "unknown"])
 
 

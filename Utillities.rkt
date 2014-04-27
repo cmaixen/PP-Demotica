@@ -92,11 +92,63 @@
 
 ;VEREISTEN! MESSAGE MOET EEN LITERAL ZIJN!
 
-  (define (list_devices_spectype list_w_stewards type message)
+  (define (list_devices_spectype list_w_stewards type message majordomo)
      (define (loop stewardlist result)
        (if (empty? stewardlist)
        result
        (let ((first-steward (car stewardlist)))
-       
-      (loop (cdr stewardlist) (append result (send first-steward message type))))))
+         ;de majordomo moet weten om welke steward het gaat
+         (send majordomo 'set-current-steward first-steward)
+       (newline) 
+         (display "type spectype")
+         (display type)
+         (newline)
+         (display message)
+         (newline)
+      (loop (cdr stewardlist) (append result (send majordomo message type))))))
       (loop list_w_stewards '()))
+
+  
+      (define (send-over-tcp message steward . type)
+ 
+      (let* ((in '())
+             (out '())
+             (ip (get_ip steward))
+             (port (get_port steward))
+             (message (if (empty? type) 
+                          message
+                          (cons message type))))
+        (let-values ([(pi po) (tcp-connect ip port)])
+          (display "Connecting with ip ....")
+          (newline)
+          (set! in pi)
+          (set! out po))
+        (display (read in))
+        (write message
+               out)
+        (flush-output out)
+        (newline)    
+        (acknowledged (read in))))
+      
+         ;geeft ip van de steward
+    (define (get_ip steward)
+      (let ((serveradress (cadr steward)))
+        (car serveradress)))
+    
+    ;geeft port van de steward
+    (define (get_port steward)
+      (let ((serveradress (cadr steward)))
+        (cdr serveradress)))
+    
+    
+;reply_value bij een error is een string
+;ander kan het eender wat zijn
+;ATTENTION: does not return a boolean
+(define (acknowledged reply)
+  (let* ((raw_output reply)
+         (acknowledge_sign  (car raw_output))
+         (reply_value (cadr raw_output)))
+    (if (eq? 'ACK acknowledge_sign)
+        reply_value
+        (begin (display reply_value)
+        (error reply_value)))))

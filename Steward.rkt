@@ -93,16 +93,15 @@
 
 
 
+;parameters logsystem location , maj vallen weg
 
-
-
-(define (make-steward majordomo location logsystem steward-database)
-  
-  (let ((db (send majordomo 'get-db))
+(define (make-steward location port)
+  (let (
         (list-of-objects '())
         (location location)
-        (logsystem (make-logsystem))
-       )
+        (already_initialized #f)
+        
+        )
     
     ;Private Hulpfunctie: parse-answer
     ;zorgt ervoor dat je het de eigelijke informatie dat je nodig hebt terug krijgt en anders false geeft
@@ -133,27 +132,10 @@
     
     ;communiceren met database voor informatie
     ;-----------------------------------------
-     
-    
+    ;mag weg allemaal
+    ; INFO FROM MAJORDOMO
+    ; <--------------------
     ;generaliserende functie
-    
-    (define (list_devices_info_from_db  position . type)
-      (if (empty? (car type))
-          (list_neutralizer (query-rows db (format "select * from ~a" steward-database)) position)
-          (list_neutralizer (query-rows db  (format "select * from ~a where type = $1" steward-database) (caar type)) position)))
-    
-    (define (list_devices_names . type) 
-      (list_devices_info_from_db  device_table_name_column  type))
-    
-    
-    (define (list_devices_serial . type)
-      (list_devices_info_from_db  device_table_serial_column  type))
-    
-    (define (list_devices_com_adress . type)
-      (list_devices_info_from_db  device_table_com_adress_column  type))
-    
-    (define (list_devices_type . type)
-      (list_devices_info_from_db  device_table_type_column  type))
     
     
     ;communiceren met devices voor informatie
@@ -179,30 +161,31 @@
                    (input (send first-obj 'get-device-input-port)))
               (write `(get type) output)
               (let ((answer (parse-answer (read input))))
-                
+                (newline)
+                (display "loopspec:   ")
+                (display command)
+                (newline)
                 (if (equal? answer (car type))
                     (begin (write `(get ,command) output)
                            (loop-spec (cdr lst) (cons (parse-answer (read input)) result)))
                     (loop-spec (cdr lst) result))))))
-      
+     
+               
       (if (null? type)
           (loop-all (reverse list-of-objects) '())
           (loop-spec (reverse list-of-objects) '())))
     
     
-    
-    
     (define (list_devices_status . type)
-      (send logsystem 'status-update location)
       (if (null? type)
-                  (list_devices_info_from_device 'status)
+          (list_devices_info_from_device 'status)
           (list_devices_info_from_device 'status (car type))))
     
     
     (define (list_devices_location . type)
       (if (null? type)
           (list_devices_info_from_device 'location)
-                    (list_devices_info_from_device 'location (car type))))
+          (list_devices_info_from_device 'location (car type))))
     
     
     (define (list_devices_mesurement . type)
@@ -214,51 +197,36 @@
     (define (list_devices_mesurement_with_value . type)
       (if (null? type)
           (list_devices_info_from_device 'mesurement_w_v)
-          
           (list_devices_info_from_device 'mesurement_w_v (car type))))
     
     
     ;voegt een gegeven device toe aan de deviceslist
     
     (define (update-devices type name serialnumber status mesurement)
-      (set! list-of-objects  (cons (make-device type name serialnumber dispatch majordomo status mesurement) list-of-objects)))
+      (set! list-of-objects  (cons (make-device type name serialnumber location status mesurement) list-of-objects))
+      (newline)
+      (display list-of-objects)
+      (newline)
+      'updated-devices)
     
     ;je bekijkt de naam als primary key, je let er ook op dat er geen dubbele serial in staat 
     
     ;procedure bepaalt welke standaardwaarde er moet gegeven  worden
-(define (mesurement_default type)
-  (if (equal? type temperaturesensor_type)
-      temperaturesensor_default_value
-      lightswitch_default_value))
+    (define (mesurement_default type)
+      (if (equal? type temperaturesensor_type)
+          temperaturesensor_default_value
+          lightswitch_default_value))
     
+    ;Moet nu via Majordomo Database
     (define (add-device type name serialnumber com-adress)
-      ;apparaat in database toevoegen 
-      ;je mag geen veld oplaten!
-      (cond ((not (and (non-empty-string? name)  (non-empty-string? serialnumber) (non-empty-string? com-adress)))
-             (error 'steward "Not everything is filled in!"))
-             ((query-maybe-row db (format "select name from ~a where name = $1" steward-database) name);we namen de lamp als primary key
-             (error 'steward "You can not add two devices with the same name!"))
-            ((query-maybe-value db (format "select serialnumber from ~a where serialnumber = $1" steward-database) serialnumber)
-             (error 'steward "serialnumber must be unique!"))
-            ((query-maybe-value db (format "select comadresse from ~a where comadresse = $1" steward-database) com-adress)
-             (error 'steward "communicationadress must be unique!"))
-            (else
-             (query-exec db (format "insert into ~a values ($1, $2 , $3 , $4, $5, $6)" steward-database) name serialnumber com-adress type status_default_value (mesurement_default type))
-             (update-devices type name serialnumber status_default_value (mesurement_default type) )
-             (send logsystem 'add-device name location))))
-    
+      (update-devices type name serialnumber status_default_value (mesurement_default type) ))
     
     ;verwijderen vvan een toestel
     (define (delete_device device-name)
-      ;uit database verwijderen
-      (query-exec db (format "DELETE from ~a where name = $1" steward-database) device-name)
-      ;uit objectenlijst verwijderen
       (set! list-of-objects (filter (lambda (x) (not (equal? device-name (send x 'get-name-sim)))) list-of-objects))
-      ;update logfile
-      (send logsystem 'delete-device device-name location))
+      'device-deleted)
     
     
-
     ;naam verkrijgen kan nog via protocol van poorten gaan, maar aangezien we hier toch aan het simuleren zijn, speelt dit op de moment geen rol
     ;In de latere fase wordt dit nog aangepast
     (define (look-up-device name arg) 
@@ -284,6 +252,7 @@
               #f)
             (let* ((first-object (car lst))
                    (name-object (send first-object 'get-name-sim)))
+              (display name)
               (if (equal? name-object  name )
                   first-object
                   (loop (cdr lst))))))
@@ -295,31 +264,20 @@
       (let* ((first-obj (get-device name))
              (output (send first-obj 'get-device-output-port))
              (input (send first-obj 'get-device-input-port)))
-        (query-exec db (format "update ~a set mesurement = $1 where name = $2" steward-database)  value name)
         (write `(set mesurement ,value) output)
         (read input)
-        (send logsystem 'change-mesurement location name value)))
+        ))
     
     ;veranderen van de status van het gegeven toestel
     (define (change-status name value)
       (let* ((first-obj (get-device name))
              (output (send first-obj 'get-device-output-port))
-             (input (send first-obj 'get-device-input-port)))
-        
-        
-       
-        
+             (input (send first-obj 'get-device-input-port))) 
         (if value
-            (begin
             (write `(set status "on") output)
-             (query-exec db (format "update ~a set status = $1 where name = $2" steward-database)  "on" name))
-            (begin
-            (write `(set status "off") output)
-            (query-exec db (format "update ~a set status = $1 where name = $2" steward-database)  "off" name)))
+            (write `(set status "off") output))
         (read input)
-        (if value
-            (send logsystem 'device-on location name)
-            (send logsystem 'device-off location name))))
+        ))
     
     
     ;initiliazatie
@@ -335,34 +293,115 @@
                    (device_type (vector-ref devicevector device_table_type_column))
                    (device_status (vector-ref devicevector device_table_status_column))
                    (device_mesurement (string->number (vector-ref devicevector device_table_mesurement_column))))
-              (set! list-of-objects (cons (make-device device_type device_name device_serial dispatch majordomo device_status device_mesurement) list-of-objects))
+              (set! list-of-objects (cons (make-device device_type device_name device_serial location device_status device_mesurement) list-of-objects))
               (loop (cdr lst)))))
-      (loop device_list))
+      (if (not already_initialized)
+          (begin 
+      (loop device_list)
+      (set! already_initialized #t)
+      'done)
+          'already_initialized))
     
     
     
-    (define (dispatch message)
-      (case message
-        ((add-device) add-device)
-        ((get-location) get-location)
-        ((list_devices_names) list_devices_names)
-        ((open-output-device) open-output-device)
-        ((open-input-device) open-input-device)
-        ((list_devices_status) list_devices_status)
-        ((list_devices_type) list_devices_type)
-        ((list_devices_com_adress) list_devices_com_adress)
-        ((list_devices_serial) list_devices_serial)
-        ((list_devices_location) list_devices_location)
-        ((list_devices_mesurement) list_devices_mesurement)
-        ((list_devices_mesurement_with_value) list_devices_mesurement_with_value)
-        ((delete_device) delete_device)
-        ((change-mesurement) change-mesurement)
-        ((change-status) change-status)
-        (else (error 'steward "unknown message ~a" message))))
+    ;DISPATCHER over TCP/IP
+    (define (dispatch message out)
+      (let* ((command (car message))
+             (arguments (cdr message))
+             (answer (generate-answer command arguments)))
+        (begin 
+          (write answer out)
+          (newline out)
+          (flush-output out))
+        ))
     
+    ;Returns '(ACK ...) of '(NACK ...)
+    (define (generate-answer command arguments)
+      (display command)
+      (display arguments)
+      (newline)
+      ;argumenten zitten in de lijst in de volgorde van de argumenten van
+      (cond ((equal? command 'add-device)
+             (let ((type (car arguments))
+                   (name (cadr arguments))
+                   (serialnumber (caddr arguments))
+                   (com-adress (cadddr arguments)))
+               (command_acknowledged (add-device type name serialnumber com-adress))
+               ))
+            ((equal? command 'get-location)
+             ;needs to be done
+             (command_acknowledged 'get-location))
+            ((equal? command 'set-location)
+            ;needs to be done
+             (command_acknowledged 'set-location))
+            ((equal? command 'open-output-device)
+             (let ((name (car arguments)))
+             (command_acknowledged  (open-output-device name))))
+            ((equal? command 'open-input-device)
+             (let ((name (car arguments)))
+               (command_acknowledged open-input-device name)))
+            ((equal? command 'list_devices_status)
+             (if (empty? arguments)
+               (command_acknowledged (list_devices_status))
+                (command_acknowledged (list_devices_status (car arguments)))))
+            ((equal? command 'list_devices_location)
+             (if (empty? arguments)
+               (command_acknowledged (list_devices_location))
+              (command_acknowledged   (list_devices_location (car arguments)))))
+            ((equal? command 'list_devices_mesurement)
+             (if (empty? arguments)
+               (command_acknowledged  (list_devices_mesurement))
+             ( command_acknowledged   (list_devices_mesurement (car arguments)))))
+            ((equal? command 'list_devices_mesurement_with_value)
+             (if (empty? arguments)
+                 (command_acknowledged (list_devices_mesurement_with_value))
+                (command_acknowledged (list_devices_mesurement_with_value (car arguments)))))
+            ((equal? command 'delete_device)
+             (let ((device-name (car arguments)))
+               (command_acknowledged (delete_device device-name))))
+            ((equal? command 'change-mesurement)
+             (let ((name (car arguments))
+                   (value (cadr arguments)))
+               (command_acknowledged (change-mesurement name value))))
+            ((equal? command 'change-status)
+             (let ((name (car arguments))
+                   (value (cadr arguments)))
+               (command_acknowledged( change-status name value))))
+            ((equal? command' initialize-steward)
+             (let ((devicelist (car arguments)))
+              (command_acknowledged (initialize devicelist))))
+            (else (invalid_command)))) 
+    
+    
+    ;boodschap bij ongeldog commando
+    (define (invalid_command)
+      '(NACK "Invalid Command"))
+    
+    (define (server listener)
+      (let ((in '())
+            (out '()))
+        (let-values ([(pi po) (tcp-accept listener)])
+          (set! in pi)
+          (set! out po)
+          (write "===>> Connection Established! <<===" out)
+          (newline out)
+          (flush-output out)
+          (dispatch (read in)  out))))
+    
+    ;oneindige loop die zorgt dat je steward blijft gaan
+    (define (infinite-loop procedure listener)
+      (display "Steward avaible")
+      (newline)
+      (procedure listener)
+      (infinite-loop procedure listener))
+    
+    
+    (infinite-loop server (tcp-listen port 10 #t))
     
     ;initialization of Steward
     ;Het genereren van de objectlijst
-    (initialize  (query-rows db (format "select * from ~a" steward-database)))
-    
-    dispatch ))
+    ;gebeurt nu vanuit de steward
+))
+
+(define (command_acknowledged reply)
+  `(ACK ,reply))

@@ -2449,3 +2449,355 @@
 - 2014-04-19 13:53:43:  UPDATE STATUS: Status of devices of steward at Livingroom updated
 - 2014-04-19 13:53:43:  UPDATE STATUS: Status of devices of steward at Bathroom updated
 - 2014-04-19 13:53:43:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-25 17:20:58:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2014-04-26 13:35:03:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:38:21:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:41:54:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:42:01:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:42:44:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:45:45:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:46:10:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:55:08:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 13:55:49:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:14:36:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:22:18:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:25:33:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:34:32:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:35:07:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:35:55:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:43:29:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:44:50:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:47:11:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:57:51:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:58:01:  ADD: Device ' testeh ' added in testlocation
+- 2014-04-26 14:58:01:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 14:58:20:  ADD: Device ' yes ' added in testlocation
+- 2014-04-26 14:58:20:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:03:51:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:04:20:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:05:31:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:35:23:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:35:40:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:36:57:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:36:59:  DELETE: Device ' testpff ' from  testlocation Deleted
+- 2014-04-26 15:37:01:  DELETE: Device ' testpff ' from  testlocation Deleted
+- 2014-04-26 15:39:18:  UPDATE STATUS: Status of devices of steward at testlocation updated
+- 2014-04-26 15:39:21:  DELETE: Device ' fdg ' from  testlocation Deleted
+- 2014-04-26 15:47:44:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 15:48:03:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 15:48:06:  DELETE: Device ' sdfsdf ' from  Livingroom Deleted
+- 2014-04-26 15:48:06:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 15:48:09:  DELETE: Device ' test ' from  Livingroom Deleted
+- 2014-04-26 15:48:09:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 15:48:53:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 15:48:56:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 15:49:14:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:13:30:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:13:53:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:14:02:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:21:41:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:28:04:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:28:04:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:28:04:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:28:16:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:28:16:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:28:16:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:30:46:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:30:46:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:30:46:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:35:52:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:35:52:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:35:52:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:36:45:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:36:45:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:36:45:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:36:53:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:36:53:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:36:53:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:38:37:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:38:56:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:39:03:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:39:03:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:39:03:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:41:33:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:41:38:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:41:43:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:41:43:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:41:43:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:44:19:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:44:22:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:44:22:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:44:22:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:46:49:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:46:49:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:46:49:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:50:55:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:50:55:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:50:55:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:55:05:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:55:05:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:55:05:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:57:29:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:57:29:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:57:29:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 16:59:38:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 16:59:38:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 16:59:38:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:01:34:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:01:34:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:01:34:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:03:26:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:03:26:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:03:26:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:04:07:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:04:07:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:04:07:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:04:13:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:04:45:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:04:45:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:04:45:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:04:49:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:06:17:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:06:17:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:06:17:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:06:47:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:06:54:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:06:56:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:06:58:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:06:58:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:06:58:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:16:03:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:16:03:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:16:03:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:17:34:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:17:34:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:17:34:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:18:35:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:18:35:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:18:35:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:20:23:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:20:23:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:20:23:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:20:36:  DELETE: Device ' 0 ' from  Bedroom Deleted
+- 2014-04-26 17:20:48:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:20:50:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:20:57:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:21:05:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:25:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:25:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:25:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:25:35:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:35:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:35:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:25:38:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:38:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:38:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:25:41:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:41:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:41:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:25:43:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:43:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:43:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:25:47:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:49:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:52:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:25:53:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:25:53:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:25:53:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:39:15:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:39:15:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:39:15:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:44:45:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:44:48:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:44:48:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:44:48:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:44:54:  ADD: Device ' trt ' added in Livingroom
+- 2014-04-26 17:51:53:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:51:53:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:51:53:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:51:56:  DELETE: Device ' dfgdf ' from  Bedroom Deleted
+- 2014-04-26 17:51:56:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:51:56:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:51:56:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:52:06:  ADD: Device ' fdsdf ' added in Livingroom
+- 2014-04-26 17:56:25:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:56:25:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:56:25:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:56:30:  ADD: Device ' fsdf ' added in Livingroom
+- 2014-04-26 17:58:57:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:58:57:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:58:57:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:59:00:  DELETE: Device ' yannickisdebest ' from  Livingroom Deleted
+- 2014-04-26 17:59:00:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:59:00:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:59:00:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:59:02:  DELETE: Device ' hallo ' from  Livingroom Deleted
+- 2014-04-26 17:59:02:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 17:59:02:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 17:59:02:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 17:59:10:  ADD: Device ' ere ' added in Livingroom
+- 2014-04-26 18:01:04:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:01:04:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:01:04:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:01:22:  ADD: Device ' ezezezeze ' added in Livingroom
+- 2014-04-26 18:03:34:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:03:34:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:03:34:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:03:40:  DELETE: Device ' 1 ' from  Livingroom Deleted
+- 2014-04-26 18:03:40:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:03:40:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:03:40:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:04:35:  ADD: Device ' hallo  ' added in Livingroom
+- 2014-04-26 18:14:15:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:14:15:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:14:15:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:14:23:  DELETE: Device ' hallo  ' from  Livingroom Deleted
+- 2014-04-26 18:14:23:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:14:23:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:14:23:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:14:48:  ADD: Device ' 1 ' added in Livingroom
+- 2014-04-26 18:19:02:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:19:02:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:19:02:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:19:11:  ADD: Device ' 2 ' added in Livingroom
+- 2014-04-26 18:22:10:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:22:10:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:22:10:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:22:18:  ADD: Device ' 3 ' added in Livingroom
+- 2014-04-26 18:26:05:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:26:05:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:26:05:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:26:13:  ADD: Device ' 4 ' added in Livingroom
+- 2014-04-26 18:31:08:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:31:08:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:31:08:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:31:11:  DELETE: Device ' 4 ' from  Livingroom Deleted
+- 2014-04-26 18:31:11:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-26 18:31:11:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-26 18:31:11:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-26 18:31:21:  ADD: Device ' 3cv ' added in Livingroom
+- 2014-04-27 14:33:22:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 14:33:22:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 14:33:22:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 14:33:29:  ADD: Device ' fdd ' added in Livingroom
+- 2014-04-27 14:41:35:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 14:41:35:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 14:41:35:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 14:41:41:  ADD: Device ' klj ' added in Livingroom
+- 2014-04-27 14:41:41:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 14:41:41:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 14:41:41:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 14:41:46:  DELETE: Device ' trt ' from  Livingroom Deleted
+- 2014-04-27 14:41:46:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 14:41:46:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 14:41:46:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 14:52:29:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 14:52:29:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 14:52:29:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 14:56:05:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 14:56:05:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 14:56:05:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:05:14:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:05:14:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:05:14:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:05:56:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:05:56:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:05:56:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:07:17:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:07:17:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:07:17:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:17:46:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:17:46:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:17:46:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:17:49:  CHANGE: Device testeh at location Livingroom changed in 0
+- 2014-04-27 15:17:49:  CHANGE: Device testeh at location Livingroom TURNED OFF 
+- 2014-04-27 15:18:35:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:18:35:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:18:35:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:26:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:26:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:26:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:30:  CHANGE: Device 3cv at location Livingroom changed in 0
+- 2014-04-27 15:21:30:  CHANGE: Device 3cv at location Livingroom TURNED OFF 
+- 2014-04-27 15:21:30:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:30:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:30:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:35:  CHANGE: Device 3cv at location Livingroom TURNED ON 
+- 2014-04-27 15:21:35:  CHANGE: Device 3cv at location Livingroom changed in 50
+- 2014-04-27 15:21:35:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:35:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:35:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:38:  CHANGE: Device 3cv at location Livingroom TURNED ON 
+- 2014-04-27 15:21:38:  CHANGE: Device 3cv at location Livingroom changed in 358
+- 2014-04-27 15:21:38:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:38:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:38:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:41:  CHANGE: Device 3cv at location Livingroom changed in 0
+- 2014-04-27 15:21:41:  CHANGE: Device 3cv at location Livingroom TURNED OFF 
+- 2014-04-27 15:21:41:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:41:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:41:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:47:  CHANGE: Device 3cv at location Livingroom TURNED ON 
+- 2014-04-27 15:21:47:  CHANGE: Device 3cv at location Livingroom changed in 358
+- 2014-04-27 15:21:47:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:47:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:47:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:52:  CHANGE: Device 1 at location Livingroom TURNED ON 
+- 2014-04-27 15:21:52:  CHANGE: Device 1 at location Livingroom changed in 358
+- 2014-04-27 15:21:52:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:52:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:52:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 15:21:57:  CHANGE: Device 1 at location Livingroom TURNED ON 
+- 2014-04-27 15:21:57:  CHANGE: Device 1 at location Livingroom changed in 639
+- 2014-04-27 15:21:57:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 15:21:57:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 15:21:57:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:19:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:19:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:19:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:21:  DELETE: Device ' fsdf ' from  Livingroom Deleted
+- 2014-04-27 17:03:21:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:21:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:21:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:26:  ADD: Device ' dsf ' added in Livingroom
+- 2014-04-27 17:03:26:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:26:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:26:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:30:  CHANGE: Device 1 at location Livingroom TURNED ON 
+- 2014-04-27 17:03:30:  CHANGE: Device 1 at location Livingroom changed in 635
+- 2014-04-27 17:03:30:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:30:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:30:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:34:  CHANGE: Device 1 at location Livingroom changed in 0
+- 2014-04-27 17:03:34:  CHANGE: Device 1 at location Livingroom TURNED OFF 
+- 2014-04-27 17:03:34:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:34:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:34:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:42:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:42:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:42:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:03:50:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:03:50:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:03:50:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:04:12:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:04:12:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:04:12:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:04:17:  ADD: Device ' dsfdfsddsf ' added in Livingroom
+- 2014-04-27 17:04:17:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:04:17:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:04:17:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:04:21:  CHANGE: Device dsfdfsddsf at location Livingroom changed in 0
+- 2014-04-27 17:04:21:  CHANGE: Device dsfdfsddsf at location Livingroom TURNED OFF 
+- 2014-04-27 17:04:21:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:04:21:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:04:21:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:04:25:  CHANGE: Device dsfdfsddsf at location Livingroom TURNED ON 
+- 2014-04-27 17:04:25:  CHANGE: Device dsfdfsddsf at location Livingroom changed in 30
+- 2014-04-27 17:04:25:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:04:25:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:04:25:  UPDATE STATUS: Status of devices of steward at Bedroom updated
+- 2014-04-27 17:04:29:  CHANGE: Device dsfdfsddsf at location Livingroom TURNED ON 
+- 2014-04-27 17:04:29:  CHANGE: Device dsfdfsddsf at location Livingroom changed in 30
+- 2014-04-27 17:04:29:  UPDATE STATUS: Status of devices of steward at Livingroom updated
+- 2014-04-27 17:04:29:  UPDATE STATUS: Status of devices of steward at Bathroom updated
+- 2014-04-27 17:04:29:  UPDATE STATUS: Status of devices of steward at Bedroom updated

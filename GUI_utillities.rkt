@@ -75,47 +75,48 @@
 ;listbox updater waarbij met de listbox helemaal update volgens de kolommen
 ;: name - type - status - serial - comadress
 
-(define (update-list-box lst-box current-steward)
-  (let ((namelst (util:send current-steward 'list_devices_names))
-        (typelst (util:send current-steward 'list_devices_type))
-        (statuslst (util:send current-steward 'list_devices_status))
-        (seriallst (util:send current-steward 'list_devices_serial))
-        (mesurementlst (util:send current-steward 'list_devices_mesurement_with_value)))
-    (util:send current-steward 'get-location)
-    (send lst-box set namelst typelst statuslst seriallst mesurementlst)))
+(define (update-list-box lst-box majordomo)
+  (let ((namelst (util:send majordomo 'list_devices_names))
+        (typelst (util:send majordomo 'list_devices_type))
+        (statuslst (util:send majordomo 'list_devices_status))
+        (seriallst (util:send majordomo 'list_devices_serial))
+        (mesurementlst (util:send majordomo 'list_devices_mesurement_with_value)))
+    ; (util:send current-steward 'get-location)
+    (send lst-box set namelst typelst statuslst seriallst mesurementlst)
+ ))
 
 
 ;listbox updater waarbij alle toestel van 1 type zijn
 ;kolommen volgens: naam - status - locatie - serial - com-adress
 
-(define (update-list-box-spectype lst-box type stewardlist)
-     (let* ((current-steward (car stewardlist))
-               (namelst (list_devices_names_spectype stewardlist type))
-               (locationlst (list_devices_locations_spectype stewardlist type))
-               (statuslst(list_devices_status_spectype stewardlist type))
-               (seriallst (list_devices_serialnumbers_spectype stewardlist type))
-               (mesurementlst (list_devices_mesurement_spectype stewardlist type)))    
-          (send lst-box set namelst statuslst locationlst  seriallst mesurementlst)
-      ( if (empty? namelst)
-           'done
-       (set-data-for-listbox lst-box namelst statuslst locationlst  seriallst mesurementlst))
-  ))
+(define (update-list-box-spectype lst-box type stewardlist majordomo)
+  (let* ((namelst (list_devices_names_spectype stewardlist type majordomo))
+         (locationlst (list_devices_locations_spectype stewardlist type majordomo))
+         (statuslst(list_devices_status_spectype stewardlist type majordomo))
+         (seriallst (list_devices_serialnumbers_spectype stewardlist type majordomo))
+         (mesurementlst (list_devices_mesurement_spectype stewardlist type majordomo))) 
+    
+    (send lst-box set namelst statuslst locationlst  seriallst mesurementlst)
+    ( if (empty? namelst)
+         'done
+         (set-data-for-listbox lst-box namelst statuslst locationlst  seriallst mesurementlst))
+    ))
 
 
 (define (set-data-for-listbox listbox namelst statuslst locationlst  seriallst mesurementlst)
   (define (loop listbox namelst statuslst locationlst  seriallst mesurementlst counter)
-        (let ((name (car namelst))
-              (status (car statuslst))
-              (location (car locationlst))
-              (serial (car seriallst))
-              (mesurement (car mesurementlst)))
-          (send listbox set-data counter (list name status location serial mesurement))
-             (if (empty? (cdr namelst))
-        'ok
+    (let ((name (car namelst))
+          (status (car statuslst))
+          (location (car locationlst))
+          (serial (car seriallst))
+          (mesurement (car mesurementlst)))
+      (send listbox set-data counter (list name status location serial mesurement))
+      (if (empty? (cdr namelst))
+          'ok
           (loop listbox (cdr namelst) (cdr statuslst) (cdr locationlst)  (cdr seriallst) (cdr mesurementlst) (+ counter 1)))))
   
- 
-      (loop listbox namelst statuslst locationlst  seriallst mesurementlst 0))
+  
+  (loop listbox namelst statuslst locationlst  seriallst mesurementlst 0))
 
 ;genereren van list-boxen
 (define (list-box-tab string column-list tabpanel) (new list-box%
@@ -133,31 +134,30 @@
 
 ;Opvragen van de namen van alle objecten van een bepaald type en geeft dit terug in een lijst
 
-  (define (list_devices_names_spectype list_w_stewards type)
-     (util:list_devices_spectype list_w_stewards type 'list_devices_names))
-  
-  
+(define (list_devices_names_spectype list_w_stewards type majordomo)
+  (util:list_devices_spectype list_w_stewards type 'list_devices_names majordomo))
+
+
 ;opvragen van de serialnumbers van alle objecten van een bepaald type en geeft dit terug in een lijst 
-  
-    (define (list_devices_serialnumbers_spectype list_w_stewards type)
-     (util:list_devices_spectype list_w_stewards type 'list_devices_serial))
-    
+
+(define (list_devices_serialnumbers_spectype list_w_stewards type majordomo)
+  (util:list_devices_spectype list_w_stewards type 'list_devices_serial majordomo))
+
 ;opvragen van de locations van alle objecten van een bepaald type en geeft dit terug in een lijst 
-    
-     (define (list_devices_locations_spectype list_w_stewards type)
-     (util:list_devices_spectype list_w_stewards type 'list_devices_location))
-     
+
+(define (list_devices_locations_spectype list_w_stewards type majordomo)
+  (util:list_devices_spectype list_w_stewards type 'list_devices_location majordomo))
+
 ;opvragen van de statussen van alle objecten van een bepaald type en geeft dit terug in een lijst 
-     (define (list_devices_status_spectype list_w_stewards type)
-       (util:list_devices_spectype list_w_stewards type 'list_devices_status))
-     
+(define (list_devices_status_spectype list_w_stewards type majordomo)
+  (util:list_devices_spectype list_w_stewards type 'list_devices_status majordomo))
+
 ;opvragen van de com-adressen van alle objecten van een bepaald type en geeft dit terug in een lijst 
-     (define (list_devices_com_adress_spectype list_w_stewards type)
-       (util:list_devices_spectype list_w_stewards type 'list_devices_com_adress))
-     
+(define (list_devices_com_adress_spectype list_w_stewards type majordomo)
+  (util:list_devices_spectype list_w_stewards type 'list_devices_com_adress majordomo))
+
 ;opvragen van de meetingen van alle objecten van een bepaald type en geeft dit terug in een lijst 
-     (define (list_devices_mesurement_spectype list_w_stewards type)
-       (util:list_devices_spectype list_w_stewards type 'list_devices_mesurement))
-    
-    
-    
+(define (list_devices_mesurement_spectype list_w_stewards type majordomo)
+  (util:list_devices_spectype list_w_stewards type 'list_devices_mesurement majordomo))
+
+

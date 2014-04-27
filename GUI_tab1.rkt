@@ -57,17 +57,15 @@
     
     ;"delete"-knop toevoegen aan paneel dat een toestel kan verwijdere, triggert ook systeem om dit uit te voeren en update listbox
     (define delete_button (new button% [parent tab-panel] [label "Delete"] [callback (lambda (button click)
-                                                                                       (util:send (util:send majordomo 'get-current-steward) 'delete_device (send (util:send GUI 'get-current-listbox) get-string-selection))
-                                                                                       (update-list-box (util:send GUI 'get-current-listbox) (util:send majordomo 'get-current-steward)))]))
+                                                                                       (util:send majordomo 'delete_device (send (util:send GUI 'get-current-listbox) get-string-selection) (util:send majordomo 'get-current-steward))
+                                                                                       (update-list-box (util:send GUI 'get-current-listbox) majordomo))]))
     ;genereren van de knoppen voor iedere kamer
     ;aan ieder knop is gelinkt aan een listbox die alle toestel van in die kamer bevat
     ;dit gedrag is kenmerkend voor tab1
-    
     (define (buttongenerator lst destination tab)
       (cond ( (empty? lst)
               (display "done"))
             ((not (equal? (util:list_size lst) (util:list_size destination))) (error 'buttongenerator-roomtab "labellist and destination list  are not of the same size"))
-            
             (else (let ((name (car lst))
                         (dest (car destination)))
                     (new button% [parent tab] [label name]
@@ -78,7 +76,7 @@
                          [callback (lambda (button click) (send tab-panel change-children (lambda (x) (list dest add_button delete_button)))
                                      (util:send GUI 'set-current-listbox dest)
                                      (util:send majordomo 'set-current-steward (util:send majordomo 'get-steward name))
-                                     (update-list-box  (util:send GUI 'get-current-listbox) (util:send majordomo 'get-current-steward)))])
+                                     (update-list-box  (util:send GUI 'get-current-listbox)  majordomo))])
                     (buttongenerator (cdr lst) (cdr destination) tab)))))
     
     
@@ -126,12 +124,12 @@
     
     ;"add"-knop in het "add"-dialoog dat het systeem triggert om ingegeven toestel toe te voegen en update listbox
     (define add_button-dialog (new button% [parent add-dialog ] [label "Add"] [callback (lambda (button click) (send add-dialog show #f)
-                                                                                          (util:send (util:send majordomo 'get-current-steward) 'add-device
+                                                                                           (util:send majordomo 'add-device
                                                                                                      (determine-choice (util:send majordomo 'get-listdevices) (send type get-selection))
                                                                                                      (send (send name_device get-editor) get-text)
                                                                                                      (send (send serial get-editor) get-text)
                                                                                                      (send (send com-adress get-editor) get-text))
-                                                                                          (update-list-box (util:send GUI 'get-current-listbox)  (util:send majordomo 'get-current-steward)))]))
+                                                                                          (update-list-box (util:send GUI 'get-current-listbox)  majordomo))]))
     
    
     

@@ -3,6 +3,13 @@
 (provide (all-defined-out))
 
 
+;Source files
+;------------
+
+(define light-graph-file "Sources/graph-light" )
+(define temp-graph-file "Sources/graph-temp" )
+(define logfile "Sources/Logfile.txt")
+
 ;Constants ADT Major Domo
 ;------------------------
 
@@ -13,7 +20,12 @@
 
 
 ;locatie van de database
-(define db-pad "pp_db.sqlite")
+(define db-pad "Sources/pp_db.sqlite")
+
+;Sleep interval van Lichtswitch grafiek
+(define light-graph-sleep 2)
+(define temp-graph-sleep 3)
+
 
 
 ;Constants GUI
@@ -73,5 +85,4 @@
 (define lightswitch_default_value 50)
 
 
-      
 

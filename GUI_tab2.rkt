@@ -73,10 +73,10 @@
                                                                                           
                                                                                           (display current-location)
                                                                                           
+                                                                                     
+                                                                                          (util:send majordomo 'delete_device current-device (util:send majordomo 'get-steward current-location) )
                                                                                           
-                                                                                          (util:send (util:send majordomo 'get-steward current-location) 'delete_device current-device)
-                                                                                          
-                                                                                          (update-list-box-spectype current-listbox type-device  (util:send majordomo 'get-list_w_stewards))))]))
+                                                                                          (update-list-box-spectype current-listbox type-device  (util:send majordomo 'get-list_w_stewards) majordomo)))]))
     
     ;ADD-Dialog
     ;----------
@@ -102,17 +102,20 @@
     
     ;"add"-knop in het "add"-dialoog dat het systeem triggert om ingegeven toestel toe te voegen en update listbox
     (define add_button-dialog (new button% [parent add-dialog ] [label "Add"] [callback (lambda (button click) (util:send add-dialog-object 'hide-dialog)
-                                                                                          (util:send (util:send majordomo 'get-steward (send location get-string-selection)) 'add-device
+                                                                                          (util:send majordomo 'set-current-steward (util:send majordomo 'get-steward (send location get-string-selection)))
+                                                                                          (util:send majordomo 'add-device
+                                                                                                     ;type
                                                                                                      (send (util:send GUI 'get-current-listbox) get-label)
+                                                                                                     ;name
                                                                                                      (send (send name_device get-editor) get-text)
+                                                                                                     ;serial
                                                                                                      (send (send serial get-editor) get-text)
+                                                                                                     ;com-adress
                                                                                                      (send (send com-adress get-editor) get-text))
-                                                                                          (update-list-box-spectype (util:send GUI 'get-current-listbox) (send (util:send GUI 'get-current-listbox) get-label) (util:send majordomo 'get-list_w_stewards)))]))
+                                                                                          
+                                                                                          (update-list-box-spectype (util:send GUI 'get-current-listbox) (send (util:send GUI 'get-current-listbox) get-label) (util:send majordomo 'get-list_w_stewards) majordomo))]))
     
-    
-    
-    
-    
+   
     ;ADJUSTMENT DIALOG TEMPERATURE
     ;-----------------------------
     
@@ -161,15 +164,19 @@
                                                           (slider (get-right-slider current-type))
                                                           (new-value (send slider get-value))
                                                           (statusvalue (not (send statusbox get-value))))
+                                                     
+                                                     ;change-mesurement en change-status werken met de current-steward.
+                                                     
+                                                   (util:send majordomo 'set-current-steward current-steward)
                                                      (if statusvalue
-                                                         (begin (util:send current-steward 'change-status current-device-name statusvalue)
-                                                                (util:send current-steward 'change-mesurement current-device-name new-value))
+                                                         (begin (util:send majordomo 'change-status current-device-name statusvalue)
+                                                                (util:send majordomo 'change-mesurement current-device-name new-value))
                                                          (begin
-                                                           (util:send current-steward 'change-mesurement current-device-name device_off_mesurement)
-                                                           (util:send current-steward 'change-status current-device-name statusvalue)
+                                                           (util:send majordomo 'change-mesurement current-device-name device_off_mesurement)
+                                                           (util:send majordomo 'change-status current-device-name statusvalue)
                                                            ))
                                                      
-                                                     (update-list-box-spectype (util:send GUI 'get-current-listbox) (send (util:send GUI 'get-current-listbox) get-label) (util:send majordomo 'get-list_w_stewards))
+                                                     (update-list-box-spectype (util:send GUI 'get-current-listbox) (send (util:send GUI 'get-current-listbox) get-label) (util:send majordomo 'get-list_w_stewards) majordomo)
                                                      (util:send adjust-dialog-object 'hide-dialog)))]))
     
     (define cancel_button-dialog (new button% [parent adjust-dialog]
@@ -206,7 +213,7 @@
                          [callback (lambda (button click) (send tab-panel change-children (lambda (x) (list dest add_button delete_button adjust_button)))
                                      (util:send GUI 'set-current-listbox dest)
                                      ;  (util:send GUI 'set-current-steward (util:send GUI 'get-steward "Bathroom"))
-                                     (update-list-box-spectype dest name (util:send majordomo 'get-list_w_stewards)))])
+                                     (update-list-box-spectype dest name (util:send majordomo 'get-list_w_stewards) majordomo))])
                     (buttongenerator-tab2 (cdr lst) (cdr destination) tab)))))
     
     

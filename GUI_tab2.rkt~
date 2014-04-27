@@ -1,97 +1,197 @@
-#lang racket
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*                                                                 *-*-
+;-*-*            Domotica Energie Monitoring Systeem                  *-*-
+;-*-*                        Yannick Merckx                           *-*-
+;-*-* Programmeerproject 2013-2014 2de Bachelor Computerwetenschappen *-*-
+;-*-*           Student van Vrije Universiteit Brussel                *-*-
+;-*-*                                                                 *-*-
+;-*-*                                                                 *-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
+; Beschrijving: ADT GUI_tab2 ; Argumenten: Majordomo-object, GUI-object
+;               Het ADT is een voorgeschreven panel met een bepaalde workflow
+;
+; Output: gui_tab2 object
+;
+; Messages:
+;
+; - get-tab2: argumenten: geen
+;          output: panel%
+;
+; Commentaar: geen
+
+#lang racket
+(require racket/gui/base)
 (#%require (prefix util: "Utillities.rkt"))
 (#%require "GUI_utillities.rkt")
+(#%require "GUI_dialogmaker.rkt")
+(#%require "Constants.rkt")
+
 (provide make_GUI_tab2)
-   ;TAB 2 / DEVICES
-    ;---------------
-    
-    ;Locatie moet nog geregeld worden het best is dat dit ook in een database wordt bijgehouden
-    ;in overweging moet er de status bijgehouden worden in database zodat het altijd mogelijk is om "offline" de status de zien hierbij wordt ook de "timestamp interessanter
-    ;personalized  info over ieder object => eigen logfile  ; meer info : wie allemaal toegang totaal energiegebruik , gemiddelde blabla, soort van profielbeschrijving
-    ;database met logfile adressen zodanig dat elke object eraan kan.
 
 
-(define (make_GUI_tab2 GUI)
+(define (make_GUI_tab2 majordomo GUI)
   (let ((mainframe (util:send GUI 'get-mainframe))
-       
+        (tab-panel (util:send GUI 'get-tabpanel))
+        (listdevices (util:send majordomo 'get-listdevices))
+        (list_w_locations (util:send majordomo 'get-listrooms)))
     
+    
+    ;ACCESSOR
+    ;--------
+    
+    (define (get-tab2)
+      tab2)
+    
+    
+    ;SETUP
+    ;-----
+    
+    ;verticaal paneel in tabpaneel
     (define tab2 (new vertical-panel%
                       [parent tab-panel]
                       [alignment (list 'center 'center)]
                       ))
     
-      (define add_button (new button% [parent tab-panel ] [label "Add"] [callback (lambda (button click) (send add-dialog show #t))]))
+    ;"add"-knop toevoegen aan paneel dat add-dialoog doet verschijnen
+    (define add_button (new button% [parent tab-panel ] [label "Add"] [callback (lambda (button click) (util:send add-dialog-object 'show-dialog))]))
+    
+    
+    
+    ;"delete"-knop toevoegen aan paneel dat een toestel kan verwijdere, triggert ook systeem om dit uit te voeren en update listbox
+    (define delete_button (new button% [parent tab-panel ] [label "Delete"] [callback (lambda (button click)
+                                                                                        
+                                                                                        (let* ((current-listbox (util:send GUI 'get-current-listbox))
+                                                                                               (current-selection (send current-listbox get-selection))
+                                                                                               (datalist (send current-listbox get-data current-selection))
+                                                                                               (current-location (caddr datalist))
+                                                                                               (current-device (car datalist))
+                                                                                               
+                                                                                               (type-device (send current-listbox get-label )))
+                                                                                          
+                                                                                          (display current-location)
+                                                                                          
+                                                                                          
+                                                                                          (util:send (util:send majordomo 'get-steward current-location) 'delete_device current-device)
+                                                                                          
+                                                                                          (update-list-box-spectype current-listbox type-device  (util:send majordomo 'get-list_w_stewards))))]))
     
     ;ADD-Dialog
-    
-      
-    
-   (define add-dialog (new dialog% [parent mainframe] 
-                            [label "Add-Dialog"]))
+    ;----------
     
     
-    (define add-dialog_panel (new vertical-panel% [parent add-dialog]
-                                  [min-width 400]
-                                 [alignment '(center center)]
-                                 [min-height 40]))
     
-     (define name_device (new text-field% [parent add-dialog_panel] [label "Name"]))
-    (define type (new choice% [parent add-dialog_panel] [label "Type"] [choices listdevices] ))
-   (define serial (new text-field% [parent add-dialog_panel] [label "Serialnumber"]))
-    (define com-adress (new text-field% [parent add-dialog_panel] [label "COM-adres"]))
-      
+    (define add-dialog-object (make-dialog GUI "Add-dialog"))
+    (define add-dialog (util:send add-dialog-object 'get-dialog))
     
-    (define add_button-dialog (new button% [parent add-dialog ] [label "Add"] [callback (lambda (button click) (send add-dialog show #f)
-                                                                                          (util:send current-steward 'add-device
-                                                                                                  (determine-choice listdevices (send type get-selection))
+    ;toevoegen van tekstvelden aan dialoog
+    
+    ;tekstveld voor naam
+    (define name_device (new text-field% [parent add-dialog] [label "Name"]))
+    
+    ;tekstveld voor locatie
+    (define location (new choice% [parent add-dialog] [label "Location"] [choices list_w_locations] ))
+    
+    ;tekstveld voor serial
+    (define serial (new text-field% [parent add-dialog] [label "Serialnumber"]))
+    
+    ;tekstveld voor het com-adress
+    (define com-adress (new text-field% [parent add-dialog] [label "COM-adres"]))
+    
+    ;"add"-knop in het "add"-dialoog dat het systeem triggert om ingegeven toestel toe te voegen en update listbox
+    (define add_button-dialog (new button% [parent add-dialog ] [label "Add"] [callback (lambda (button click) (util:send add-dialog-object 'hide-dialog)
+                                                                                          (util:send (util:send majordomo 'get-steward (send location get-string-selection)) 'add-device
+                                                                                                     (send (util:send GUI 'get-current-listbox) get-label)
                                                                                                      (send (send name_device get-editor) get-text)
                                                                                                      (send (send serial get-editor) get-text)
                                                                                                      (send (send com-adress get-editor) get-text))
-                                                                                         (update-list-box-tab2 current-listbox))]))
-    
-    (define delete_button (new button% [parent tab-panel ] [label "Delete"] [callback (lambda (button click)
-                                                                                        
-                                                                                        (util:send get-current-steward 'delete_device (send current-listbox get-string-selection))
-                                                                                        
-                                                                                        (update-list-box-tab2 current-listbox))]))
-     ;algmene functie 
-   (define (determine-choice lst selection)
-     (define (loop lst counter)
-       (let ((choice (car lst)))
-         (if (= counter selection)
-             choice
-             (loop (cdr lst) (+ counter 1)))))
-     (if (< (util:list_size lst) selection)
-         (error 'determine-choice-function "Selection is out of range of the list!")
-         (loop lst 0)))
-    
-   
-    
-   ;!!!! HOGERE ORDE FUNCTIE IS HIER MOGELIJK! MOET NOG AANGEPAST WORDEN!!!!!!
-    
-        (define (list-box-tab2 string type) 
-          (new list-box%
-                                   (label string)
-                                   (parent tab-panel)
-                                   (choices '())
-                                   (style (list 'single
-                                                'column-headers))
-                                   (columns (list "Name"
-                                                  "Status"
-                                                  "Location"
-                                                  "Serial"
-                                                  "Last Update"
-                                                  ))))
-      ;creeren van listboxen
-    
-    (define list-box-lightswitch (list-box-tab2 "Lightswitch" "Lightswitch" ))
-    (define list-box-tempsensor (list-box-tab2 "Temperaturesensor" "Temperaturesensor"  ))
+                                                                                          (update-list-box-spectype (util:send GUI 'get-current-listbox) (send (util:send GUI 'get-current-listbox) get-label) (util:send majordomo 'get-list_w_stewards)))]))
     
     
-     ;creeeren van knoppen tab2
     
-        (define (buttongenerator-tab2 lst destination tab)
+    
+    
+    ;ADJUSTMENT DIALOG TEMPERATURE
+    ;-----------------------------
+    
+    (define adjust-dialog-object (make-dialog GUI "Adjustment-Dialog"))
+    (define adjust-dialog (util:send adjust-dialog-object 'get-dialog))
+    
+    
+    
+    ;selecteer de juiste slider die moeten worden weergegeven
+    (define (get-right-slider type)
+      (cond ((equal? type lightswitch_type) slider-light)
+            ((equal? type temperaturesensor_type) slider-temp)
+            (else (error 'get-right-slider "unknown type, no valid slider found!"))))
+    
+    ;"adjust"-knop toevoegen aan paneel dat add-dialoog doet verschijnen
+    (define adjust_button (new button% [parent tab-panel ] [label "Adjust"] [callback (lambda (button click)
+                                                                                        (let* ((slidertype (send (util:send GUI 'get-current-listbox) get-label))
+                                                                                               (correct-slider (get-right-slider slidertype)))
+                                                                                          (send adjust-dialog change-children (lambda (x)(list correct-slider statusbox confirm_button-dialog cancel_button-dialog)))
+                                                                                          
+                                                                                          (util:send adjust-dialog-object 'show-dialog)))]))
+    
+    
+    ;temperatuurslider
+    (define slider-temp (new slider% [parent adjust-dialog] [label "°C"] [min-value min_value_tempslider]	 
+                             [max-value max_value_tempslider]
+                             [min-width min_width_dialog]	 
+                             [min-height min_height_dialog]))
+    ;lichtslider
+    (define slider-light (new slider% [parent adjust-dialog] [label "Watt"] [min-value min_value_ligthslider]	 
+                              [max-value max_value_ligthslider]
+                              [min-width min_width_dialog]	 
+                              [min-height min_height_dialog]))
+    
+    ;bevestigingsknop
+    (define confirm_button-dialog (new button% [parent adjust-dialog ] 
+                                       [label "Confirm"] 
+                                       [callback (lambda (button click)
+                                                   (let* ((current-listbox (util:send GUI 'get-current-listbox))
+                                                          (current-selection (send current-listbox get-selection))
+                                                          (datalist (send current-listbox get-data current-selection))
+                                                          (current-location (caddr datalist))
+                                                          (current-steward (util:send majordomo 'get-steward current-location))
+                                                          (current-device-name (car datalist))
+                                                          (current-type (send current-listbox get-label))
+                                                          (slider (get-right-slider current-type))
+                                                          (new-value (send slider get-value))
+                                                          (statusvalue (not (send statusbox get-value))))
+                                                     (if statusvalue
+                                                         (begin (util:send current-steward 'change-status current-device-name statusvalue)
+                                                                (util:send current-steward 'change-mesurement current-device-name new-value))
+                                                         (begin
+                                                           (util:send current-steward 'change-mesurement current-device-name device_off_mesurement)
+                                                           (util:send current-steward 'change-status current-device-name statusvalue)
+                                                           ))
+                                                     
+                                                     (update-list-box-spectype (util:send GUI 'get-current-listbox) (send (util:send GUI 'get-current-listbox) get-label) (util:send majordomo 'get-list_w_stewards))
+                                                     (util:send adjust-dialog-object 'hide-dialog)))]))
+    
+    (define cancel_button-dialog (new button% [parent adjust-dialog]
+                                      [label "Cancel"]
+                                      [callback (lambda (button click) (util:send adjust-dialog-object 'hide-dialog))]))
+    
+    ;statusbox toevoegen
+    
+    (define statusbox (new check-box%	 
+                           [label "Turn Device Off"]	 
+                           [parent adjust-dialog]
+                           [value #f]))
+    
+    ;creeren van listboxen
+    
+    (define list-box-lightswitch (list-box-tab lightswitch_type (list "Name" "Status" "Location" "Serial" "Usage (Watt)") tab-panel))
+    (define list-box-tempsensor (list-box-tab temperaturesensor_type (list "Name" "Status" "Location" "Serial" "Current Temperature (°C)" ) tab-panel))
+    
+    
+    ;creeeren van knoppen tab2
+    
+    (define (buttongenerator-tab2 lst destination tab)
       (cond ( (empty? lst)
               (display "done"))
             ((not (equal? (util:list_size lst) (util:list_size destination))) (error 'buttongenerator-roomtab "labellist and destination list  are not of the same size"))
@@ -99,40 +199,27 @@
             (else (let ((name (car lst))
                         (dest (car destination)))
                     (new button% [parent tab] [label name]
-                         [vert-margin 20]	
-                         [horiz-margin 20]	 
-                         [min-width 20]	 
-                         [min-height 20]
-                         [callback (lambda (button click) (send tab-panel change-children (lambda (x) (list dest add_button delete_button)))
-                                     (set! current-listbox dest)
-                              (set! current-steward (get-steward "Bathroom"))
-                                     (update-list-box-tab2 dest name))])
+                         [vert-margin standaardmargin_button]	
+                         [horiz-margin standaardmargin_button]	 
+                         [min-width standaardmargin_button]	 
+                         [min-height standaardmargin_button]
+                         [callback (lambda (button click) (send tab-panel change-children (lambda (x) (list dest add_button delete_button adjust_button)))
+                                     (util:send GUI 'set-current-listbox dest)
+                                     ;  (util:send GUI 'set-current-steward (util:send GUI 'get-steward "Bathroom"))
+                                     (update-list-box-spectype dest name (util:send majordomo 'get-list_w_stewards)))])
                     (buttongenerator-tab2 (cdr lst) (cdr destination) tab)))))
     
-        (define (update-list-box-tab2 lst-box type)
-      (let ((namelst (util:send current-steward 'list_devices_names type ))
-            
-            (statuslst (util:send current-steward 'list_devices_status type))
-            (seriallst (util:send current-steward 'list_devices_serial type))
-            (com-adresslst (util:send current-steward 'list_devices_com_adress type)))
-        (display namelst)
-        (display statuslst)
-        (display seriallst)
-        (display com-adresslst)
-        
-        (send lst-box set namelst statuslst statuslst seriallst com-adresslst)))
     
     
-                    
+    
     
     (buttongenerator-tab2 listdevices (list list-box-lightswitch list-box-tempsensor) tab2)
-  
- 
-  (define (dispatch message)
-    (case message
-      ((get-tab2) get-tab2)
-      (else (error 'tab2 "unknown message ~a" message)))))
+    
+    
+    (define (dispatch message)
+      (case message
+        ((get-tab2) get-tab2)
+        (else (error 'tab2 "unknown message ~a" message))))
+    
+    dispatch))
 
-dispatch))
-  
-  
