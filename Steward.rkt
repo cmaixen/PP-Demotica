@@ -161,10 +161,6 @@
                    (input (send first-obj 'get-device-input-port)))
               (write `(get type) output)
               (let ((answer (parse-answer (read input))))
-                (newline)
-                (display "loopspec:   ")
-                (display command)
-                (newline)
                 (if (equal? answer (car type))
                     (begin (write `(get ,command) output)
                            (loop-spec (cdr lst) (cons (parse-answer (read input)) result)))
@@ -204,9 +200,6 @@
     
     (define (update-devices type name serialnumber status mesurement)
       (set! list-of-objects  (cons (make-device type name serialnumber location status mesurement) list-of-objects))
-      (newline)
-      (display list-of-objects)
-      (newline)
       'updated-devices)
     
     ;je bekijkt de naam als primary key, je let er ook op dat er geen dubbele serial in staat 
@@ -252,7 +245,6 @@
               #f)
             (let* ((first-object (car lst))
                    (name-object (send first-object 'get-name-sim)))
-              (display name)
               (if (equal? name-object  name )
                   first-object
                   (loop (cdr lst))))))
@@ -317,9 +309,6 @@
     
     ;Returns '(ACK ...) of '(NACK ...)
     (define (generate-answer command arguments)
-      (display command)
-      (display arguments)
-      (newline)
       ;argumenten zitten in de lijst in de volgorde van de argumenten van
       (cond ((equal? command 'add-device)
              (let ((type (car arguments))

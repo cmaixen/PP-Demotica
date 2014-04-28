@@ -59,28 +59,7 @@
          (logsystem (make-logsystem))
          (listrooms (list_neutralizer (query-rows db "select location from the_stewards") steward_table_locationcolummn))
          (listdevices (list lightswitch_type temperaturesensor_type)))
-    
-   
-        
-    ;SENDING OVER TCP/IP
-    ;RETURN: ANY
-    (define (send-over-tcp message steward . type)
-      (let* ((in '())
-             (out '())
-             (ip (get_ip steward))
-             (port (get_port steward)))
-        (let-values ([(pi po) (tcp-connect ip port)])
-          (display "Connecting with ip ....")
-          (newline)
-          (set! in pi)
-          (set! out po))
-        (display (read in))
-        (write message
-               out)
-        (flush-output out)
-        (newline)    
-        (acknowledged (read in))))
-    
+       
     
     ;starten van programma
     (define (start)
@@ -114,9 +93,7 @@
     (define (make_steward_info location ip port steward_database)
       (let ((new_steward (cons location (cons (cons ip port) steward_database)))
            (stewardinfo (query-rows db (format "select * from ~a" steward_database))))
-        (display location)
-      ;  (send-over-tcp `(initialize-steward ,new_steward))
-        (display (send-over-tcp `(initialize-steward ,stewardinfo) new_steward))
+        (send-over-tcp `(initialize-steward ,stewardinfo) new_steward)
         new_steward))
     
     
@@ -317,13 +294,13 @@
     
 
     (initialize_majordomo)
-    
+    (print "thread1 started")
     ;thread die om het uur informatie wegschrijft naar de logfile wat het gemiddelde verbruik is
     (thread    (lambda () 
                  (do ([i 1 (+ i 1)])
                    ((= i 0) (print "done"))
                    (sleep light-graph-sleep)
-                   (print "thread called")
+                   
                    (let* ((file light-graph-file)
                           (input (open-input-file file))
                           (old-lst-data (read input))
@@ -336,12 +313,13 @@
     
     
     ;thread die om het uur informatie wegschrijft naar de logfile wat het gemiddelde verbruik is
+    (print "thread2 started")
     (thread    (lambda () 
                  (do ([i 1 (+ i 1)])
                    ((= i 0) (print "done"))
                    
                    (sleep temp-graph-sleep)
-                   (print "thread2 called")
+           
                    (let* ((file temp-graph-file)
                           (input (open-input-file file))
                           (old-lst-data (read input))
