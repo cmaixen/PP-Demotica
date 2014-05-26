@@ -1,0 +1,54 @@
+#lang racket
+
+
+(define (make-Powerplug)
+(let ((64-adress  #(0 19 162 0 64 155 139 45))
+      (16-adress #(0 0))
+      (name "PowerPlug"))
+  
+  (define (get-name) 
+    name)
+  
+  (define (get_64-adress)
+    64-adress)
+  
+  (define (get_16-adress)
+    16-adress)
+  
+   (define(get-command message)
+     
+  
+  
+  (define (handle-request message)
+    (let ((command (get-command message))
+          (converted-message (convert_to_string message)))
+      
+      
+    
+  
+  
+       (define (dispatch message)
+         (case message
+           ((get_64_adress) get_64-adress)
+           ((get_name) get_name)
+           ((get_16-adress) get_16-adress)
+           ((request) handle-request)
+           (else (error 'XBEE "unknown message ~a" message))))
+  
+  
+  ))
+  
+  
+  
+  
+  
+  ;hulpfunctie om snel info uit verctors te krijge
+  (define (vector-loop start end given-vector)
+    (define (loop counter final-vector)
+      (if (> counter end)
+          'done
+          (begin
+          (vector-set! final-vector (- counter start) (vector-ref given-vector counter))
+          (loop (+ counter 1) final-vector))))
+    (loop start (make-vector (- end start))))
+          

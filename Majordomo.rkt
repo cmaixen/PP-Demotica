@@ -82,7 +82,7 @@
             'done  
             (let* ((devicevector (car lst))
                    (location (vector-ref devicevector steward_table_locationcolummn))
-                   (steward-database (vector-ref devicevector steward_table_steward_database_column))
+                   (steward-database (vector-ref devicevector steward_table_steward_database_column)) ;naam van database waar stewardinfor zich bevind
                    (ip (vector-ref devicevector steward_table_ip_column))
                    (port (vector-ref devicevector steward_table_port_column)) 
                    (serveradress (cons ip port)))                
@@ -90,22 +90,37 @@
               (loop (cdr lst)))))
       (loop (query-rows db "select * from the_stewards")))
     
+    (define (initialize_2)
+      (let* (  (location "Livingroom")
+               (steward-database "Livingroom") ;naam van database waar stewardinfor zich bevind
+               (ip "192.168.1.131")
+               (port 6666) 
+               (serveradress (cons ip port)))
+ (set! list_w_stewards (list  (make_steward_info location ip port steward-database)))))
+    
     (define (make_steward_info location ip port steward_database)
       (let ((new_steward (cons location (cons (cons ip port) steward_database)))
-           (stewardinfo (query-rows db (format "select * from ~a" steward_database))))
-        (send-over-tcp `(initialize-steward ,stewardinfo) new_steward)
+           )
+     (check_online_device  (send-over-tcp 'initialize new_steward))
+        (display new_steward)
         new_steward))
+    
+    
+    (define (check_online_device lst_with_discovered_devices)
+      'done)
     
     
     ;geeft de steward terug op de overeenkomstige locatie 
     ;iedere steward valt te identificeren aan zijn locatie! dus algemeen wordt de locatie als de naam/identiteit van de steward genomen.
-    
     (define (get-steward locationname)
+      
       (define (search lst)
         (if (empty? lst)
             (error 'search "steward -> ~a not found" locationname)
             (let* ((first_steward (car lst))
                    (location (get_location first_steward)))
+               (display location)
+              (display locationname)
               (if (equal? location locationname)
                   first_steward
                   (search (cdr lst))))))
@@ -123,12 +138,9 @@
     (define (get_location steward)
       (car steward))
     
- 
-    
     ;geeft database (de naam ervan) terug
     (define (get_steward_db steward)
       (cddr steward))
-    
     
     ;geeft de databaconnectie door
     (define (get-db)
@@ -138,12 +150,9 @@
     (define (get-listrooms)
       listrooms)
     
-    
     ;geeft een lijst terug met al de verschillende types van devices. !LIGT VAST!
     (define (get-listdevices)
       listdevices)
-    
-    
     
     ;geeft de lijst met stewardobjecten terug
     (define (get-list_w_stewards)
@@ -152,8 +161,6 @@
     
     ;MUTATOREN
     ;---------
-    
-    
     ;de huidige steward veranderen in de gegeven
     (define (set-current-steward steward)
      (set! current-steward  steward))
@@ -166,169 +173,52 @@
             (loop (cdr lst) (+ result (string->number (car lst))) (+ counter 1))))
       (loop list 0 0))
     
-    ;INFORMATIE KRIJGEN VAN HUIDIGE STEWARD(wordt gebruikt door GUI)
-    ;---------------------------------------------------------------
+ 
+   ;initializeren van de steward
+   ; (initialize_majordomo)
+    (initialize_2)
     
-    ;MUTATOREN STEWARD
-    ;-----------------
-    
-    
-    (define (delete_device device-name steward)
-      (let ((steward-database (get_steward_db steward))
-            (location (get_location steward)))
-        ;uit database verwijderen
-         (query-exec db (format "DELETE from ~a where name = $1" steward-database) device-name)
-
-         (send-over-tcp `(delete_device ,device-name) steward)
-         ;update logfile
-         ;location moet er nog bij
-         (send logsystem 'delete-device device-name location)))              
-    
-    
-    (define (change_mesurement_current_steward name value)
-      (let ((steward-database (get_steward_db current-steward))
-            (location (get_location current-steward)))
-        ;in database veranderen
-        (query-exec db (format "update ~a set mesurement = $1 where name = $2" steward-database)  value name)
-         (send-over-tcp `(change-mesurement ,name ,value) current-steward)
-         ;update logfile
-         (send logsystem 'change-mesurement location name value)))
-    
-    (define (change_status_current_device name value)
-      (let ((steward-database (get_steward_db current-steward))
-            (location (get_location current-steward)))
-        (if value
-            (begin
-              (send-over-tcp `(change-status ,name "on") current-steward)
-              (query-exec db (format "update ~a set status = $1 where name = $2" steward-database)  "on" name))
-            (begin
-              (send-over-tcp `(change-status ,name "off") current-steward)
-              (query-exec db (format "update ~a set status = $1 where name = $2" steward-database)  "off" name)))
-        (if value
-            (send logsystem 'device-on location name)
-            (send logsystem 'device-off location name))))
-    
-    (define (add-device type name serialnumber com-adress)
-      (let ((steward-database (get_steward_db current-steward))
-            (location (get_location current-steward)))
-        ;apparaat in database toevoegen 
-        ;je mag geen veld oplaten!
-        (cond ((not (and (non-empty-string? name)  (non-empty-string? serialnumber) (non-empty-string? com-adress)))
-               (error 'steward "Not everything is filled in!"))
-              ((query-maybe-row db (format "select name from ~a where name = $1" steward-database) name);we namen de lamp als primary key
-               (error 'steward "You can not add two devices with the same name!"))
-              ((query-maybe-value db (format "select serialnumber from ~a where serialnumber = $1" steward-database) serialnumber)
-               (error 'steward "serialnumber must be unique!"))
-              ((query-maybe-value db (format "select comadresse from ~a where comadresse = $1" steward-database) com-adress)
-               (error 'steward "communicationadress must be unique!"))
-              (else
-               (query-exec db (format "insert into ~a values ($1, $2 , $3 , $4, $5, $6)" steward-database) name serialnumber com-adress type status_default_value (mesurement_default type))
-     
-               (send-over-tcp `(add-device ,type ,name ,serialnumber ,com-adress) current-steward)
-               (send logsystem 'add-device name location)))))
-    
-    ;ACCESSOREN STEWARD
-    ;------------------
-    
-    ;algemene functie
-    (define (list_devices_info_from_db  position . type)
-      (let ((steward-database (get_steward_db current-steward)))
-        (if (empty? (car type))
-            (list_neutralizer (query-rows db (format "select * from ~a" steward-database)) position)
-            (list_neutralizer (query-rows db  (format "select * from ~a where type = $1" steward-database) (caar type)) position))))
-    
-    (define (list_devices_names_current_steward . type)
-      (list_devices_info_from_db  device_table_name_column  type))
-    
-    (define (list_devices_serial_current_steward . type)
-      (list_devices_info_from_db  device_table_serial_column  type))
-    
-    (define (list_devices_com_adress_current_steward . type)
-      (list_devices_info_from_db  device_table_com_adress_column  type))
-    
-    (define (list_devices_type_current_steward . type)
-      (list_devices_info_from_db  device_table_type_column  type))
-    
-    ;onrechtstreeks via steward aan devices info vragen
-  
-    (define (list_devices_status . type)
-      (let ((location (get_location current-steward)))
-      (send logsystem 'status-update location)
-      
-      (if (null? type)
-          (send-over-tcp '(list_devices_status) current-steward)
-          (send-over-tcp `(list_devices_status ,(car type)) current-steward))))
-    
-    
-    (define (list_devices_location . type)
-      (if (null? type)
-          (send-over-tcp '(list_devices_location) current-steward)
-          (send-over-tcp `(list_devices_location ,(car type)) current-steward)))
-    
-    
-    (define (list_devices_mesurement . type)
-      (if (null? type)
-          (send-over-tcp '(list_devices_mesurement) current-steward)
-          (send-over-tcp `(list_devices_mesurement ,(car type)) current-steward)))
-    
-    
-    (define (list_devices_mesurement_with_value . type)
-      (if (null? type)
-          (send-over-tcp '(list_devices_mesurement_with_value) current-steward)
-          (send-over-tcp `(list_devices_mesurement_with_value ,(car type)) current-steward)))
-    
-    (define (initialize-steward-list stewardlst)
-      (define (loop lst)
-        (if (empty? lst)
-            (begin
-              (display "steward-list is initialized")
-              (newline))
-            (let* ((steward (car lst))
-                   (steward-database (cddr steward))
-                   (stewardinfo (query-rows db (format "select * from ~a" steward-database))))
-              (set! current-steward steward)
-              ;send-over-tcp neemt altijd current steward om er nr toe te zenden, KUNNNEN WE NOG VERANDEREN
-              (send-over-tcp '(initialize-steward stewardinfo))
-              (loop (cdr lst)))))
-      (loop stewardlst))
-    
-
-    (initialize_majordomo)
     (print "thread1 started")
     ;thread die om het uur informatie wegschrijft naar de logfile wat het gemiddelde verbruik is
-    (thread    (lambda () 
-                 (do ([i 1 (+ i 1)])
-                   ((= i 0) (print "done"))
-                   (sleep light-graph-sleep)
-                   
-                   (let* ((file light-graph-file)
-                          (input (open-input-file file))
-                          (old-lst-data (read input))
-                          (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards lightswitch_type 'list_devices_mesurement dispatch)))
-                          (new-data-list (cons new-value old-lst-data)))
-                     (close-input-port input)
-                     (let ((output (open-output-file file #:exists 'can-update)))
-                       (write new-data-list output)
-                       (close-output-port output))))))
+   ; (thread    (lambda () 
+   ;              (do ([i 1 (+ i 1)])
+   ;                ((= i 0) (print "done"))
+   ;                (sleep light-graph-sleep)
+   ;                
+   ;                (let* ((file light-graph-file)
+   ;                       (input (open-input-file file))
+   ;                       (old-lst-data (read input))
+   ;                       (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards lightswitch_type 'list_devices_mesurement dispatch)))
+   ;                       (new-data-list (cons new-value old-lst-data)))
+   ;                  (close-input-port input)
+   ;                  (let ((output (open-output-file file #:exists 'can-update)))
+   ;                    (write new-data-list output)
+   ;                    (close-output-port output))))))
     
     
     ;thread die om het uur informatie wegschrijft naar de logfile wat het gemiddelde verbruik is
-    (print "thread2 started")
-    (thread    (lambda () 
-                 (do ([i 1 (+ i 1)])
-                   ((= i 0) (print "done"))
-                   
-                   (sleep temp-graph-sleep)
-           
-                   (let* ((file temp-graph-file)
-                          (input (open-input-file file))
-                          (old-lst-data (read input))
-                          (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards temperaturesensor_type 'list_devices_mesurement dispatch)))
-                          (new-data-list (cons new-value old-lst-data)))
-                     (close-input-port input)
-                     (let ((output (open-output-file file #:exists 'can-update)))
-                       (write new-data-list output)
-                       (close-output-port output))))))
+    ;(print "thread2 started")
+    ;(thread    (lambda () 
+    ;             (do ([i 1 (+ i 1)])
+    ;               ((= i 0) (print "done"))
+    ;               
+    ;               (sleep temp-graph-sleep)
+    ;       
+    ;               (let* ((file temp-graph-file)
+    ;                      (input (open-input-file file))
+    ;                      (old-lst-data (read input))
+    ;                      (new-value (calculate-average-from-numberlist (list_devices_spectype list_w_stewards temperaturesensor_type 'list_devices_mesurement dispatch)))
+    ;                      (new-data-list (cons new-value old-lst-data)))
+    ;                 (close-input-port input)
+    ;                 (let ((output (open-output-file file #:exists 'can-update)))
+    ;                   (write new-data-list output)
+    ;                   (close-output-port output))))))
+    
+    ;commando sturen naar steward en dan xbee
+    ;bv: (send-over-tcp "SET POW=ON" EnergySensor_LivingRoom) 
+    (define (request message device_name)
+      (send-over-tcp message current-steward device_name))
+    
 
     
         (define (dispatch message)
@@ -338,28 +228,22 @@
         ((get-listrooms) get-listrooms)
         ((get-listdevices) get-listdevices)
         ((get-db) get-db)
+        ((request) request)
         ((get-list_w_stewards) get-list_w_stewards)
         ((get-current-steward) get-current-steward)
         ((set-current-steward) set-current-steward)
-        ((delete_device) delete_device)
-        ((list_devices_names) list_devices_names_current_steward)
-        ((list_devices_serial) list_devices_serial_current_steward)
-        ((list_devices_com_adress) list_devices_com_adress_current_steward)
-        ((list_devices_type) list_devices_type_current_steward)
-        ((list_devices_status) list_devices_status)
-        ((list_devices_location) list_devices_location)
-        ((list_devices_mesurement) list_devices_mesurement)
-        ((list_devices_mesurement_with_value) list_devices_mesurement_with_value)
-        ((add-device) add-device)
-        ((change-mesurement) change_mesurement_current_steward)
-        ((change-status) change_status_current_device)
         (else (error 'Majordomo "unknown message ~a" message))))
     
     dispatch))
 
 
 
+(define test (make-majordomo))
 
+(send test 'set-current-steward (send test 'get-steward "Livingroom"))
+
+
+(send test 'request "SET POW=ON" "ZBS110V2120895")
 
 ;TO DO represent steward in list and database and make connection => needs to be done! 
 ;GUI needs to be working

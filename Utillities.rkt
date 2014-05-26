@@ -110,25 +110,21 @@
 
   
       (define (send-over-tcp message steward . type)
- 
       (let* ((in '())
              (out '())
              (ip (get_ip steward))
              (port (get_port steward))
-             (message (if (empty? type) 
-                          message
-                          (cons message type))))
+             (message (cons message type)))
         (let-values ([(pi po) (tcp-connect ip port)])
           (display "Connecting with ip ....")
           (newline)
           (set! in pi)
           (set! out po))
         (display (read in))
-        (write message
-               out)
+        (newline)
+        (write message out)
         (flush-output out)
-        (newline)    
-        (acknowledged (read in))))
+        (read in)))
       
          ;geeft ip van de steward
     (define (get_ip steward)

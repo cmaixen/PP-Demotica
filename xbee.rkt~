@@ -1,0 +1,90 @@
+#lang R5RS
+
+(require data/queue)
+
+(define (make-xbee)
+  (let* ((buffer (make-queue))
+         (discoverd #f)
+         (devicelist '())
+         (xbee-list-nodes '()))
+    
+    ;commandos
+    (define Transmit_request 16)
+    (define Transmit_status 139)
+    (define Transmit_answer 144)
+    
+    
+    
+    ;aanmaken van devices bepaald aantal devices en deze teruggeven 
+    ;geeft niets terug
+    (define (xbee-discover-nodes)
+      (let ((device_one (make_PowerPlug))
+            (device_two (make_EnergySystem)))
+        ;lijst met xbee-device objecten
+        (set! devicelist (list device_one device_two))
+        ;al meteen xbee-list-nodes opbouwen
+        ;gemakkelijker voor later
+        (set! xbee-list-nodes (list (cons (send device_one 'get_name) (send device_one 'get_64-adress))
+                                    (cons (send device_two 'get_name) (send device_two 'get_64-adress))))
+        ;discovered op true zetten
+        (set! discoverd #t)
+        ))
+    
+    (define (xbee-list-nodes)
+      xbee-list-nodes)
+    
+    (define (xbee-write device_adress message)
+      (let ((device (get-object device-adress))
+            (prepared_message (prepare-message device_adress message))
+            ;stuurt naar device en voegt frame toe aan de buffer 
+            (enqueue! (send device 'request prepared_message)))))
+    
+    
+    ;geeft het device-object terug dat moet worden aangesproken
+    (define (get-object given_device_adress)
+      (define (loop lst)
+        (if (empty? lst)
+            (error "Device not found")
+            (let* ((first_device (car lst))
+                   (device_adress (send first_device 'get_64-adress)))
+              (if (equals? device_adress given_device_adress)
+                  first_device
+                  (loop (cdr loop))))))
+      (loop devicelist))
+    
+    ;maak van gekrege bericht een API-frame
+    (define (prepare_message given_device_adress orignal_message)
+      (let* ((message (vector->list orignal_message))
+             (device_adress (vector->list given_device_adress)))
+        (list->vector (list Transmit_request object-adress 0 0 1 message 10 10))))
+   
+    
+    ;de queue leegmaken
+    (define (empty-queue! queue)
+      (define (loop)
+        (if (queue-empty? queue)
+            'done 
+            (loop queue)))
+      (loop))
+    
+    
+    ;geeft de queu terug en maakt deze vervolgens leeg
+    (define (xbee-tick)
+      (let (xbee-buffer buffer)
+        (empty-queue! buffer)
+        buffer))
+    
+    
+    
+         
+       (define (dispatch message)
+         (case message
+           ((xbee-write) xbee-write)
+           ((xbee-tick) xbee-tick)
+           ((xbee-list-nodes) xbee-list-nodes)
+           ((xbee-discover-nodes) xbee-discover-nodes)
+           (else (error 'XBEE "unknown message ~a" message))))
+    dispatch
+       
+       )
+  )

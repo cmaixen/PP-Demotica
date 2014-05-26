@@ -1,0 +1,33 @@
+#lang R5RS
+
+
+
+
+(define (make-queue)
+ 
+  (let ((queue_info '()))
+    
+    
+   (define  (enqueue! value)
+     (append (queue_info) (list value)))
+    
+    
+    
+    (define (dequeue!)
+      (if (null? queue_info)
+          (display "ERROR queue is empty!")
+         (let ((val (car queue_info)))
+      (set! queue_info (cdr queue_info))
+           val)))
+      
+    
+    
+    
+    
+(define (dispatch message)
+  (case message
+    ((enqueue!) enqueue!)
+    ((dequeue!) dequeue!)
+    (else (display "ERROR QUEUE unknown message"))))
+    
+    dispatch))
