@@ -1,0 +1,1 @@
+("5.3.1" ("e4930e8923fbbc42bf320278495c713a4abda2f5" . "2d59b49a5bd4e0b3c17b69d5c4f414b20cb96ed4") (collects #"rnrs" #"bytevectors-6.rkt") (collects #"r5rs" #"main.rkt") (collects #"r5rs" #"lang" #"reader.rkt"))
