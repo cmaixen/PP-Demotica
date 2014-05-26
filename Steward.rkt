@@ -87,7 +87,6 @@
 (#%require "Utillities.rkt")
 (#%require "Devices.rkt")
 (#%require "Logsystem.rkt")
-(#%require "Constants.rkt")
 (#%require "xbee_utils.rkt")
 (#%require "xbee.rkt")
 (#%require "queue.rkt")

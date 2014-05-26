@@ -131,7 +131,7 @@
       (let ((serveradress (cadr steward)))
         (car serveradress)))
     
-    ;geeft port van de steward
+    ;geeft port van de stewardÚ
     (define (get_port steward)
       (let ((serveradress (cadr steward)))
         (cdr serveradress)))

@@ -243,7 +243,7 @@
 (send test 'set-current-steward (send test 'get-steward "Livingroom"))
 
 
-(send test 'request "SET POW=ON" "ZBS110V2120895")
+(send test 'request "GET\n" "coordinator")
 
 ;TO DO represent steward in list and database and make connection => needs to be done! 
 ;GUI needs to be working

@@ -1,1 +1,1 @@
-("5.3.1" ("a6fdd1a47a75cb59f0672e6a3639450fff2abd8e" . "48a8a06764ea94a2d209557d10fb772f72d2f5d0") (collects #"errortrace" #"errortrace-key.rkt") (collects #"r5rs" #"main.rkt") (collects #"R5RS" #"lang" #"reader.rkt"))
+("5.3.1" ("e4930e8923fbbc42bf320278495c713a4abda2f5" . "f14f2b14ce848aa18f03f221177e65d1e39aacf4") (collects #"rnrs" #"bytevectors-6.rkt") (collects #"errortrace" #"errortrace-key.rkt") (collects #"r5rs" #"main.rkt") (collects #"r5rs" #"lang" #"reader.rkt"))

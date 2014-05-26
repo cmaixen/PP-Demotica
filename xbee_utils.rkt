@@ -1,9 +1,10 @@
-#lang R5RS
+#lang r5rs
+
+
+(#%require rnrs/bytevectors-6)
+
 
 (#%provide (all-defined))
-
-
-
 
   (define (string->vector string)
     (list->vector (map char->integer (string->list string))))
@@ -27,7 +28,31 @@
                           (newline))))))
           (loop arguments '()))
          
+    
   
+    (define (vector->bytevector vector)
+      (let* ((size (vector-length vector))
+             (bytevector (make-bytevector size)))
+        (define (loop counter)
+          (if (= counter size)
+              bytevector
+              (begin 
+              (bytevector-u8-set! bytevector counter (vector-ref vector counter))
+              (loop (+ counter 1)))))
+        (loop 0)))
+              
+          
+    (define (bytevector->vector bytevector)
+      (let* ((size (bytevector-length bytevector))
+             (vector (make-vector size)))
+        (define (loop counter)
+          (if (= counter size)
+              vector
+              (begin 
+              (vector-set! vector counter (bytevector-u8-ref bytevector counter))
+              (loop (+ counter 1)))))
+        (loop 0)))
+              
   
   ;hulpfunctie om snel info uit verctors te krijge
   (define (vector-loop start end given-vector)
