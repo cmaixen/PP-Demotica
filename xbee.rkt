@@ -1,4 +1,4 @@
-#lang R5RS
+#lang r5rs
 
 (#%require "Utillities.rkt")
 (#%require "Powerplug.rkt")
@@ -12,8 +12,15 @@
   (let* ((buffer (make-queue))
          (discoverd #f)
          (devicelist '())
-         (xbee-with-list-nodes '()))
+         (xbee-with-list-nodes '())
+         (empty-buffer #f))
     
+    
+    (define (empty-xbee-buffer)
+      (if empty-buffer
+          (begin (send buffer 'empty-queue!)
+                 (set! empty-buffer #f))
+          'done))
     
     
     ;aanmaken van devices bepaald aantal devices en deze teruggeven 
@@ -25,8 +32,8 @@
         (set! devicelist (list device_one device_two))
         ;al meteen xbee-list-nodes opbouwen
         ;gemakkelijker voor later
-        (set! xbee-with-list-nodes `( ,(cons (send device_one 'get_name) (send device_one 'get_64-adress))
-                                 ,(cons (send device_two 'get_name) (send device_two 'get_64-adress))))
+        (set! xbee-with-list-nodes (list (list (send device_one 'get_name) (send device_one 'get_64-adress))
+                                      (list (send device_two 'get_name) (send device_two 'get_64-adress))))
         
         ;discovered op true zetten
         (set! discoverd #t)
@@ -58,17 +65,31 @@
         (send buffer 'enqueue! status_frame)
         (send buffer 'enqueue! receive_frame)
         (display (send buffer 'queue-empty?)
-        )))
+                 )))
     
     
     
     ;geeft het device-object terug dat moet worden aangesproken
     (define (get-object given_device_adress)
+      (newline)
+      (display "given adress to xbee")
+      (display given_device_adress)
+      (newline)
+     (display  xbee-with-list-nodes)
+      
       (define (loop lst)
         (if (null? lst)
             (display  "Device not found")
             (let* ((first_device (car lst))
                    (device_adress (send first_device 'get_64-adress)))
+              
+              (display "first device:")
+              (display first_device)
+              (newline)
+              (display "device_adress:")
+              (display device_adress)
+                (display given_device_adress)
+              (display  (equal? device_adress given_device_adress))
               (if (equal? device_adress given_device_adress)
                   first_device
                   (loop (cdr lst))))))
@@ -88,13 +109,14 @@
     
     ;geeft de queu terug en maakt deze vervolgens leeg
     (define (xbee-tick)
-      (let* ((xbee-buffer buffer)
-            (temp xbee-buffer))
-       ; (send buffer 'empty-queue!)
-        
-        temp))
+      (let* ((xbee-buffer buffer))
+        ;buffer van de xbee bij de volgende aanspreking leegmaken    
+        (set! empty-buffer #t) 
+        xbee-buffer))
     
     (define (dispatch message)
+      ;kijken of de buffer leeggemaakt moet worden
+      (empty-xbee-buffer)
       (case message
         ((xbee-write) xbee-write)
         ((xbee-tick) xbee-tick)

@@ -81,7 +81,7 @@
 
 
 
-#lang R5RS
+#lang r5rs
 (#%require racket/tcp)
 (#%require racket/base)
 (#%require "Utillities.rkt")
@@ -132,7 +132,8 @@
   (set! steward_buffer (send xbee 'xbee-tick))
     (newline)
     (newline)
-    (display (send steward_buffer 'queue-empty?)))
+    (display "steward bufer empty?: ")
+             (display (send steward_buffer 'queue-empty?)))
     
     
     ;message is al geconverteerd naar vector
@@ -214,7 +215,7 @@
                    (display "Given Devicename is not linked to device-adress"))
             (let* ((device_pair (car lst))
                   (device_name (car device_pair))
-                  (device_adress (cdr device_pair)))
+                  (device_adress (cadr device_pair)))
               (if (equal? device_name given_device_name)
                   device_adress
                   (loop (cdr lst))))))
@@ -225,8 +226,11 @@
       ;argumenten zitten in de lijst in de volgorde van de argumenten van
       (cond ((equal? command 'get-location)
              location)
-            ((equal? command `initialize)
+            ((equal? command 'initialize)
              (initialize))
+            ((equal? command 'list_of_devices)
+             (display "list of devices caleeed")
+             list_of_devices)
             (else
              (let* ((device_name (car arguments))
                     (device_adress (get_device_adress device_name)))

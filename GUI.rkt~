@@ -97,7 +97,7 @@
     
     (define tab-panel
       (new tab-panel%	 
-           [choices (list "Rooms" "Devices" "Map" "Logs")]	 
+           [choices (list "Rooms" "Devices" "Graphs" "Logs")]	 
            [parent mainframe]
            [callback (lambda (tab-panel click)
                        (case (send tab-panel get-selection)

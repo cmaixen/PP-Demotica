@@ -33,9 +33,8 @@
 (require racket/gui/base)
 (require db)
 (#%require (prefix util: "Utillities.rkt"))
-(#%require "GUI_tab1.rkt")
+(#%require "GUI_tab1-1.rkt")
 (#%require "GUI_loginscreen.rkt")
-(#%require "GUI_tab2.rkt")
 (#%require "GUI_logtab.rkt")
 (#%require "GUI_analysticstab.rkt")
 (#%require "Constants.rkt")
@@ -97,12 +96,11 @@
     
     (define tab-panel
       (new tab-panel%	 
-           [choices (list "Rooms" "Devices" "Graphs" "Logs")]	 
+           [choices (list "Rooms" "Graphs" "Logs")]	 
            [parent mainframe]
            [callback (lambda (tab-panel click)
                        (case (send tab-panel get-selection)
                          ((0) (send tab-panel change-children (lambda (x) (list tab1))))
-                         ((1) (send tab-panel change-children (lambda (x) (list tab2))))
                          ((2) (send tab-panel change-children (lambda (x) (list analysticstab))))
                          (else 	 (util:send logtab-object 'update-log)	 	 	
                                     (send tab-panel change-children (lambda (x) (list logtab))) )
@@ -119,19 +117,12 @@
     ;Tab1
     ;----
     
-    (define tab1-object (make_GUI_tab1 majordomo dispatch))
+    (define tab1-object (make_GUI_tab1-1 majordomo dispatch))
     (define tab1 (util:send tab1-object 'get-tab1))
     
     
+    
     ;TAB2
-    ;----
-    
-    (define tab2-object (make_GUI_tab2 majordomo dispatch))
-    (define tab2 (util:send tab2-object 'get-tab2))
-    
-    
-    
-    ;TAB3
     ;----
     
     (define analysticstab-object (make_GUI_analysticstab dispatch))
@@ -139,7 +130,7 @@
     
     
     
-    ;TAB4
+    ;TAB3
     ;----
     
     (define logtab-object (make_GUI_logtab dispatch))
@@ -149,9 +140,9 @@
     ;initialization tabpanel
     (send tab-panel change-children (lambda (x) (list tab1)))
    
-        
-    ;TAB 5
-    ;-----
+     ;TAB 5
+    ;-------
+    ;userinfo
     
     
     dispatch

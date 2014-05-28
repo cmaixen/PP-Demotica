@@ -1,0 +1,240 @@
+#lang racket
+(require racket/gui/base)
+(require racket/draw)
+
+;(#%require "GUI_utillities.rkt")(#%require "Constants.rkt")
+;(provide make_GUI_tab1)
+
+
+(define (make_GUI_tab1 majordomo GUI)
+
+
+;ACCESSOREN
+;----------
+
+  (define (get-tab1)
+tab1)
+
+
+
+
+(define mainframe (new frame% [label "Log in"]
+                       [width mainframe_width]
+                       [height mainframe_height]))
+
+(define tab-panel
+  (new tab-panel%	 
+       [choices (list "Rooms" "Graphs" "Logs")]	 
+       [parent mainframe]
+       [callback (lambda (tab-panel click)
+                   (case (send tab-panel get-selection)
+                     ((0) tab1)
+                     ((1) 'done)
+                     ((2) 'done)
+                     (else 'done)))]))
+
+
+(define maincontainer (new vertical-panel%
+                           [parent tab-panel]
+                           [spacing 0]
+                         ;  [style (list 'border)]
+                           [alignment (list 'center 'center)]
+                           ))
+
+
+;verticaal paneel in tabpaneel
+(define tab_info (new horizontal-panel%
+                      [parent maincontainer]	 
+               ;       [style (list 'border)]
+                      [alignment (list 'center 'top)]
+                      ))
+
+(new editor-canvas%	 
+     [parent maincontainer]
+     )
+
+(define image_in_tab (new vertical-panel%
+                          [parent tab_info]
+                          [spacing 0]	 
+                          [style (list 'border)]
+                           [vert-margin 0]
+                          [alignment (list 'center 'top)]
+                          ))
+
+(define device_info_canvas (new vertical-panel%
+                                [parent tab_info]
+                                [spacing 0]
+                           ;  [style (list 'border)]
+                               
+                                [alignment (list 'left 'top)]
+                                ))
+
+(define device_info_canvas_info (new vertical-panel%
+                                [parent device_info_canvas]
+                                [spacing 0]
+                             [style (list 'border)]
+                                
+                                [alignment (list 'left 'top)]
+                                ))
+
+(define l (new message% [parent image_in_tab] 
+               [label (make-object bitmap% "/Users/yannickmerckx/Downloads/multisensor.png" 'png/alpha)]
+               	[stretchable-width #t]	 
+   	 	[stretchable-height #t]	 
+   	 	[auto-resize #t]
+               )) 
+
+
+;splits de verkregen string in een lijst met strings
+;Bv: (split-string-in-list "POW=on\nFREQ=49.8125Hz\nVRMS=227V\nIRMS=1988mA\nLOAD=443W\nWORK=0.046kWh\n"  #\newline)
+(define (split-string-in-list string split_char)
+  (let ((converted-lst (string->list string)))
+    (print converted-lst)
+  (define (loop lst  templst resultlst)
+    
+    (if (empty? lst)
+        resultlst
+    (let ((next_char (car lst)))
+      (if (equal? next_char  split_char)
+         (begin (loop (cdr lst) '() (append resultlst (list (list->string templst))))
+                ; (display templst)
+                )   
+         (loop (cdr lst) (append templst (list next_char)) resultlst)))))
+    (loop converted-lst '() '())))
+          
+  
+
+
+
+
+(define (create_info_panel  panel list_of_strings)
+  (define (loop lst)
+    (  if (empty? lst)
+          'done
+          (let ((message (car lst)))
+            (new message% [parent panel] 
+                 [label message]
+                 ;	[vert-margin 2]
+                 ;   [horiz-margin 4]
+                 )
+            (loop (cdr lst)))))
+  (loop list_of_strings))
+
+(create_info_panel device_info_canvas_info (list "POW=on" "FREQ=49.8125Hz" "VRMS=227V" "IRMS=1988mA" "LOAD=443W" "WORK=0.046kWh"))
+
+
+;
+(define tab1 (new vertical-panel%
+                  [parent tab-panel]
+                  [spacing 0]	 
+                  [alignment (list 'center 'center)]
+                  ))
+
+
+;genereren van de knoppen voor iedere kamer
+;aan ieder knop is gelinkt aan een listbox die alle toestel van in die kamer bevat
+;dit gedrag is kenmerkend voor tab1
+(define (buttongenerator lst tab frame-lambda)
+  (cond ( (empty? lst)
+          (display "done"))
+        (else (let ((name (car lst)))
+                (new button% [parent tab] [label name]
+                     [vert-margin standaardmargin_button]	
+                     [horiz-margin standaardmargin_button]	 
+                     [min-width standaardmargin_button]	 
+                     [min-height standaardmargin_button]
+                     [callback (lambda (button click)
+                                 (send tab-panel change-children frame-lambda))])
+                (buttongenerator (cdr lst) tab frame-lambda)))))
+
+
+
+(buttongenerator (list "Livingroom" "Bathroom" "Bedroom") tab1  (lambda (x) (list tab1-1)))
+
+
+(define change_panel (new vertical-panel%
+                          [parent device_info_canvas]
+                          [alignment (list 'left 'center)]
+                          	[style (list 'border)]
+                          ))
+
+
+(define statusbox (new check-box%	 
+                       [label "Turn Device Off"]	 
+                       [parent change_panel]
+                       [vert-margin 20]
+                       
+                       [value #f]))
+
+
+(define setter_panel (new horizontal-panel%
+                          [parent change_panel]
+                          [spacing 0]
+                       
+                                 [vert-margin 20]
+                          [alignment (list 'left 'center)]
+                          ))
+
+(define choice (new choice%
+                    (label "Choice")
+                    (parent setter_panel)
+                    (choices (list "Item 1" "Item 2" "Item 3" "Item 4" "Item 6" ))
+                    [callback (lambda (c e) (send setter_panel change-children (lambda (x) (list choice slider))))]))
+
+                    
+                    
+                    
+                    (define slider (new slider%
+                                        (label "Slider")
+                                        (parent setter_panel)
+                                        (min-value 0)
+                                        (max-value 100)
+                                        (init-value 42)))
+                    
+                    
+                    
+                    (send setter_panel change-children (lambda (x) (list choice)))
+                    
+                    
+                    
+                    ;   (define (dispatch message)
+                    ;;     (case message 
+                    ;       ((get-tab1) get-tab1)
+                    ;       (else (error 'tab1 "unknown message ~a" message))))
+                    
+                    
+                    ; dispatch
+                    ;  )
+                    
+                    
+                    ;verticaal paneel in tabpaneel
+                    (define tab1-1 (new vertical-panel%
+                                        [parent tab-panel]
+                                        [spacing standard_spacing]	 
+                                        [alignment (list 'center 'center)]
+                                        ))
+                    
+                    (send tab-panel  change-children (lambda (x) (list tab1)))
+                    
+                    
+                    
+                    (buttongenerator (list "PowerSensor" "EnergySensor") tab1-1 (lambda (x) (list maincontainer)))
+                    
+                    
+                    
+                    ; new panel device    ;verticaal paneel in tabpaneel
+                    (define tab1-2 (new vertical-panel%
+                                        [parent tab-panel]
+                                        [spacing standard_spacing]	 
+                                        [alignment (list 'center 'center)]
+                                        ))
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    (send mainframe show #t)
+                    
+                    

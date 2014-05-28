@@ -1,3 +1,7 @@
+#lang racket
+
+
+
  ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 ;-*-*                                                                 *-*-
@@ -9,37 +13,6 @@
 ;-*-*                                                                 *-*-
 ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-
-; Beschrijving: ADT Majordomo ; Argumenten: geen
-;               
-;
-; Output: majordomo object
-;
-; Messages:
-;
-; - start: argumenten: geen
-;          output: void
-
-; - get-steward: argumenten: naam (de naam van de steward dat je wil)(string?)
-;          output: steward-object
-
-; - get-listrooms: argumenten: geen
-;          output: (listof string?  ...) (lijst met al de verschillende kamers waar een steward staat)
-
-; - get-listdevices: argumenten: geen
-;          output: (listof string?  ...) (lijst met al de verschillende types van toestellen)
-
-; - get-list_w_stewards: argumenten: geen
-;          output: (listof steward-object ...) (lijst met alle stewards in)
-
-; - get-current-steward: argumenten: geen
-;          output: steward-object (geeft huidige actuele steward terug)
-
-; - set-current-steward: argumenten: steward-object
-;          output: void (zet de huidige actuele steward op de gegeven steward)
-;
-; Commentaar: geen
-
 #lang racket
 (#%require  "Utillities.rkt")
 (#%require "GUI.rkt") 
@@ -66,30 +39,6 @@
       (send (make-gui dispatch logsystem) 'start))
     
     
-    
-    ;initializatiefunctie
-    
-    ;maakt een interne lijst met steward objecten aan
-    ;bij het aanmaken kijkt hij in de database welke stewards er zijn aangemaakt
-    
-    ;---------------------------------------------------------------------------------------------------------------------------------------------
-    ;| VERANDERING: Ipv objecten gaat majordomo nu info sturen om steward te initialiseren en worden serveradress opgeslagen in  de stewardlijst |
-    ;---------------------------------------------------------------------------------------------------------------------------------------------
-    
-    (define  (initialize_majordomo)
-      (define (loop lst)
-        (if (empty? lst)
-            'done  
-            (let* ((devicevector (car lst))
-                   (location (vector-ref devicevector steward_table_locationcolummn))
-                   (steward-database (vector-ref devicevector steward_table_steward_database_column)) ;naam van database waar stewardinfor zich bevind
-                   (ip (vector-ref devicevector steward_table_ip_column))
-                   (port (vector-ref devicevector steward_table_port_column)) 
-                   (serveradress (cons ip port)))                
-              (set! list_w_stewards (cons (make_steward_info location ip port steward-database) list_w_stewards))
-              (loop (cdr lst)))))
-      (loop (query-rows db "select * from the_stewards")))
-    
     (define (initialize_2)
       (let* (  (location "Livingroom")
                (steward-database "Livingroom") ;naam van database waar stewardinfor zich bevind
@@ -97,6 +46,7 @@
                (port 6666) 
                (serveradress (cons ip port)))
  (set! list_w_stewards (list  (make_steward_info location ip port steward-database)))))
+    
     
     (define (make_steward_info location ip port steward_database)
       (let ((new_steward (cons location (cons (cons ip port) steward_database)))
@@ -237,17 +187,13 @@
     dispatch))
 
 
-
+;test voor de lamp
 (define test (make-majordomo))
 
 (send test 'set-current-steward (send test 'get-steward "Livingroom"))
 
+(send test 'request "SET POW=ON\n")
 
 (send test 'request "GET\n" "coordinator")
 
-;TO DO represent steward in list and database and make connection => needs to be done! 
-;GUI needs to be working
-
-
-;(send-over-tcp '(add-device "test"))
 
