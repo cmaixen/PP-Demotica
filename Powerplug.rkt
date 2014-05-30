@@ -33,6 +33,10 @@
       16-adress)
     
     (define(get-command message)
+      (newline)
+      (display "received command:")
+      (display (vector->string (vector-loop 1 3 message)))
+      (newline)
       (vector->string (vector-loop 1 3 message)))
     
     
@@ -40,6 +44,13 @@
     ;voorbereiden van antwoord van getframe
     ;geeft string terug
     (define (prepare_getframe)
+      (display "make get_frame")
+      (display       (append_string "POW=" POW "\n"
+                      "FREQ=" FREQ "\n"
+                      "VRMS=" VRMS "\n"
+                      "IRMS=" IRMS  "\n"
+                      "LOAD=" LOAD "\n"
+                      "WORK=" WORK  "\n"))
       (process_answer_as_frame
        (append_string "POW=" POW "\n"
                       "FREQ=" FREQ "\n"
@@ -71,28 +82,27 @@
             (nack #f))
         (display 3_letter_command)
         (cond ((equal? 3_letter_command "POW")
-               (let ((new_val (vector-loop 9 (vector-length message) message)))
-                 (display (vector->string new_val))
-                 (set! POW (vector->list new_val))))
+               (let ((new_val (vector->string  (vector-loop 9 (- (vector-length message) 1) message)))) ;de -1 wordt gedaan omdat er na ieder commando een newline volgt en deze prutsen we de newline weg
+                 (set! POW  new_val)))
               ((equal? 4_letter_command "FREQ")
-               (let ((new_val (vector-loop 10 (vector-length message) message)))
-                 (display (vector->string new_val))
+               (let ((new_val (vector->string (vector-loop 10 (- (vector-length message) 1) message))))
+     
                  (set! FREQ new_val)))
               ((equal? 4_letter_command "VRMS")
-               (let ((new_val (vector-loop 10 (vector-length message) message)))
-                 (display (vector->string new_val))
+               (let ((new_val (vector->string (vector-loop 10 (- (vector-length message) 1) message))))
+           
                  (set! VRMS new_val)))
               ((equal? 4_letter_command "IRMS")
-               (let ((new_val (vector-loop 10 (vector-length message) message))) 
-                 (display (vector->string new_val))
+               (let ((new_val (vector->string (vector-loop 10 (- (vector-length message) 1) message))) )
+              
                  (set! IRMS new_val)))
               ((equal? 4_letter_command "LOAD")
-               (let ((new_val (vector-loop 10 (vector-length message) message))) 
-                 (display (vector->string new_val))
+               (let ((new_val (vector->string (vector-loop 10 (- (vector-length message) 1) message))))
+              
                  (set! LOAD new_val)))
               ((equal? 4_letter_command "WORK")
-               (let ((new_val ((vector-loop 10 (vector-length message) message))) )
-                 (display (vector->string new_val))
+               (let ((new_val (vector->string (vector-loop 10 (- (vector-length message) 1) message))) )
+         
                  (set! WORK new_val)))
               (else (display "invalid command")
                     (newline)))

@@ -48,15 +48,15 @@
       (display type)
       (newline)
     (if (equal? type "ZBS-110") ;komt overeen met het product id van de powerplug
-       (util:send (make_GUI_tab1-3-powerplug majordomo dispatch) 'get-tab)
-      (util:send (make_GUI_tab1-3-multisensor majordomo dispatch) 'get-tab))))
+       (util:send (make_GUI_tab1-3-powerplug majordomo dispatch name) 'get-tab)
+      (util:send (make_GUI_tab1-3-multisensor majordomo dispatch name) 'get-tab))))
     
  ;genereren van juiste linking van knoppen van toestel naar toestel overzicht
     (define (buttongenerator-devices lst tab)
       (cond ( (empty? lst)
               'done)
             (else (let* ((name (car lst))
-                        (type-panel (decide-type name)))  ;MOET NOG VERANDEREN
+                        (type-panel (decide-type name)))
                     (new button% 
                          [parent tab] 
                          [label name]
@@ -65,6 +65,8 @@
                          [min-width standaardmargin_button]	 
                          [min-height standaardmargin_button]
                          [callback (lambda (button click)
+                                     ;zet huidig toestel op het geselecteerde toestel
+                                     (util:send majordomo 'set-current-device name)
                                      (send tab-panel change-children (lambda (x) (list type-panel))))])
                     (buttongenerator-devices (cdr lst) tab)))))
     
@@ -87,6 +89,8 @@
                                                (util:send majordomo 'set-current-steward name)
                                                (util:send majordomo 'get_list_devicesnames_steward))))
                     
+                    ;zet current-steward juist 
+                     (util:send majordomo 'set-current-steward name)
                     ;voegt de nodige koppen aan aangemaakt paneel                
                     (buttongenerator-devices list_devices_steward linked-tab)
                                                

@@ -8,9 +8,12 @@
 (provide make_GUI_tab1-3-multisensor)
 
 
-(define (make_GUI_tab1-3-multisensor majordomo GUI)
+(define (make_GUI_tab1-3-multisensor majordomo GUI name_of_device)
   (let ((tab-panel (util:send GUI 'get-tabpanel))
-        (mainframe (util:send GUI 'get-mainframe)))
+        (mainframe (util:send GUI 'get-mainframe))
+        (slider-enabled #f))
+   
+    
     
     
     
@@ -49,9 +52,9 @@
                           ))
     
     ;editor voor de onderste helft van het scherm
-    (new editor-canvas%	 
+   (define editor-canvas (new editor-canvas%	 
          [parent tab1-3]
-         )
+         ))
     
     
     ;linkerbovenhoek van het canvas 
@@ -80,14 +83,35 @@
                                     [alignment (list 'left 'top)]
                                     ))
     
+    
+    
+    
     ;bovenste helft van linkerbovenhoek
-    (define device_info_canvas_info (new vertical-panel%
+    (define device_info_canvas_info(new horizontal-panel%
                                          [parent device_info_canvas]
+                                         [spacing 0]
+                                         [style (list 'border)]
+                                         
+                                         [alignment (list 'left 'center)]
+                                         ))
+    
+        ;bovenste helft van linkerbovenhoek
+    (define device_info_canvas_info_GET (new vertical-panel%
+                                         [parent device_info_canvas_info]
                                          [spacing 0]
                                          [style (list 'border)]
                                          
                                          [alignment (list 'left 'top)]
                                          ))
+
+    (define device_info_canvas_info_DEV(new vertical-panel%
+                                         [parent device_info_canvas_info]
+                                         [spacing 0]
+                                         [style (list 'border)]
+                                         
+                                         [alignment (list 'left 'top)]
+                                         ))
+    
     
     
     ;afbeelden van de info in het infovenster
@@ -110,14 +134,7 @@
                               [alignment (list 'left 'center)]
                               [style (list 'border)]
                               ))
-    
-    ;geeft een status box weer die het toestel aan of uitzet
-    (define statusbox (new check-box%	 
-                           [label "Turn Device Off"]	 
-                           [parent change_panel]
-                           [vert-margin 20]
-                           
-                           [value #f]))
+
     
     ;paneel dat de slider en de choices bij elkaar houd
     (define setter_panel (new horizontal-panel%
@@ -129,8 +146,49 @@
                               ))
 
         
+
+    
+    (define (compose_set_command choice slider)
+      (let ((value (send slider get-value)))
+      (format "SET ~a=~a\n" choice value)))
+    
+    
+    (define (compose_print_command choice slider)
+      (let ((value (send slider get-value)))
+      (format "SET ~a=~a" choice value)))
+        
+      (define confirm_buttom (new button% [parent change_panel] 
+                                [label "Confirm Changes"]
+                                [vert-margin standaardmargin_button]	
+                                [horiz-margin standaardmargin_button]	 
+                                [min-width standaardmargin_button]	 
+                                [min-height standaardmargin_button]
+                                [callback (lambda (button click) (let* ((text (new text%))
+                                                                        (device-name (util:send majordomo 'get-current-device))
+                                                                        (current-steward (util:send majordomo 'get-current-steward)))
+                                                                      
+                                                                   (if slider-enabled
+                                                                          ;stuur commando 
+                                                                          (let ((commando (compose_set_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
+                                                                                (printcommando (compose_print_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection)))))
+                                                                            
+                                                                            (send text insert (format ">> Sending ~a to ~a in the ~a ... \n " printcommando device-name current-steward))
+                                                                            (send text insert (format ">>>> Answer: ~a " (util:send majordomo 'request commando name_of_device))))
+                                                                          'done)
+                                                                 
+                                                       
+                                                                   (send editor-canvas set-editor text)
+                                                                   ;update info device
+                                                                   (update_device_info)
+                                                                   ))]))
+    
+    
+    
+    
+    
     ;return the right slider
     (define (get-right-slider choice)
+      (set! slider-enabled #t)
      ( cond ((equal? choice "TXT")
             TXT-slider)
       ((equal? choice "MSI")
@@ -150,7 +208,7 @@
       (new choice%  (label "Choice")
            (parent setter_panel)
            (choices (list "TXT" "MSI" "LOTEM" "HITTEM" "LOBRI" "HIBRI"))
-           [callback (lambda (c e) (send setter_panel change-children (lambda (x) (list choice (get-right-slider c)))))]))
+           [callback (lambda (c e) (send setter_panel change-children (lambda (x) (list choice (get-right-slider (send c get-string-selection))))))]))
     
     
  
@@ -203,7 +261,13 @@
     (send setter_panel change-children (lambda (x) (list choice)))
     
     
-    (create_info_panel device_info_canvas_info (list "POW=on" "FREQ=49.8125Hz" "VRMS=227V" "IRMS=1988mA" "LOAD=443W" "WORK=0.046kWh"))
+(define (update_device_info)
+  (send device_info_canvas_info_GET change-children (lambda (x) '()))
+  (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline)))
+    
+    
+    (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline))
+     (create_info_panel device_info_canvas_info_DEV (split-string-in-list (util:send majordomo 'request "DEV\n" name_of_device) #\newline))
     
     
 

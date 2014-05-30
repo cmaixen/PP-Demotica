@@ -101,7 +101,7 @@
            [callback (lambda (tab-panel click)
                        (case (send tab-panel get-selection)
                          ((0) (send tab-panel change-children (lambda (x) (list tab1))))
-                         ((2) (send tab-panel change-children (lambda (x) (list analysticstab))))
+                         ((1) (send tab-panel change-children (lambda (x) (list analysticstab))))
                          (else 	 (util:send logtab-object 'update-log)	 	 	
                                     (send tab-panel change-children (lambda (x) (list logtab))) )
                          ))]))

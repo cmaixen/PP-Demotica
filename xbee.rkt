@@ -45,6 +45,11 @@
     (define (xbee-write device_adress message)
       (let ((device (get-object device_adress)))
         ;stuurt naar device en voegt frame toe aan de buffer 
+        (newline)
+        (newline) 
+        (display "message: ")
+        (display message)
+        (newline)
         (process_answer (send device 'request message))))
     
     

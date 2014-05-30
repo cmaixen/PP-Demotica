@@ -208,6 +208,8 @@
       (newline)
       (newline)
    (display (list? list_of_devices))
+      (display "given_display_name ")
+      (display given_device_name)
       
       (define (loop lst)
         (if (null? lst)
