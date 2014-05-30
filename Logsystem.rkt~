@@ -50,7 +50,7 @@
 
 
 (define (make-logsystem)
-  (let ((adress-logfile "/Users/yannickmerckx/Dropbox/Unif/2de bachelor/Programmeerproject 2/PP-Demotica/Logfile.txt"))
+  (let ((adress-logfile "Sources/Logfile.txt"))
     
     ;instellingen:
     

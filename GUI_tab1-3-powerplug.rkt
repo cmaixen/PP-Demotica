@@ -10,7 +10,7 @@
 (provide make_GUI_tab1-3-powerplug)
 
 
-(define (make_GUI_tab1-3-powerplug majordomo GUI name_of_device)
+(define (make_GUI_tab1-3-powerplug majordomo GUI name_of_device logsystem)
   (let ((tab-panel (util:send GUI 'get-tabpanel))
         (mainframe (util:send GUI 'get-mainframe))
         (slider-enabled #f)
@@ -184,6 +184,8 @@
       (let ((value (send slider get-value)))
       (format "SET ~a=~a" choice value)))
     
+     (define (check_ack string)
+     (eq? (string-ref string 0) #\a ))
 
     (define confirm_buttom (new button% [parent change_panel] 
                                 [label "Confirm Changes"]
@@ -200,9 +202,13 @@
                                                                    
                                                                    ;toestel staat aan en user wenst deze uit te zetten
                                                                    (cond ((and turn_device_off is_pow_on)
-                                                                          (begin
+                                                                          (let ((answer (util:send majordomo 'request "SET POW=OFF\n" name_of_device)))
                                                                             (send text insert (format ">> Shutting down  ~a in the ~a ... \n" device-name current-steward))
-                                                                            (send text insert (format ">>> Answer: ~a \n" (util:send majordomo 'request "SET POW=OFF\n" name_of_device)))))
+                                                                            (send text insert (format ">>> Answer: ~a \n" answer))
+                                                                                (if (check_ack answer)
+                                                                               ( util:send logsystem 'device-off current-steward name_of_device )
+                                                                               'nack)))
+                                                                          
                                                                          
                                                                          
                                                                          ;toestel staat uit en men wil het toestel uitzetten
@@ -211,28 +217,42 @@
                                                                          
                                                                          ;device staat uit en men wil een commando sturen 
                                                                          ((not is_pow_on)
+                                                                           (let ((answer  (util:send majordomo 'request "SET POW=ON\n"name_of_device)))
                                                                           ;zet het toestel aan
                                                                           (send text insert (format ">> Turn On ~a in the ~a ... \n" device-name current-steward))
-                                                                          (send text insert (format ">>>>Answer: ~a \n " (util:send majordomo 'request "SET POW=ON\n"name_of_device)))
+                                                                          (send text insert (format ">>>>Answer: ~a \n " answer))
+                                                                           (if (check_ack answer)
+                                                                               ( util:send logsystem 'device-on current-steward name_of_device )
+                                                                               'nack))
                                                                           
                                                                        (   if slider-enabled
                                                                           ;stuur commando 
-                                                                          (let ((commando (compose_set_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
-                                                                            (print_commando (compose_print_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection)))))
+                                                                          (let* ((commando (compose_set_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
+                                                                            (print_commando (compose_print_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
+                                                                            (answer (util:send majordomo 'request commando name_of_device)))
                                                                             
                                                                             
                                                                             (send text insert (format ">> Sending ~a to ~a in the ~a ... \n " print_commando device-name current-steward))
-                                                                            (send text insert (format ">>>> Answer: ~a " (util:send majordomo 'request commando name_of_device))))
+                                                 
+                                                                            (send text insert (format ">>>> Answer: ~a" answer ))
+                                                                            (if (check_ack answer)
+                                                                               ( util:send logsystem 'change-mesurement current-steward name_of_device (send choice get-string-selection) (send (get-right-slider (send choice get-string-selection)) get-value))
+                                                                               'nack))
                                                                           'done))
                                                                          ;stuur commando device staat al aan
                                                                          (else
                                                                           
                                                                           (if slider-enabled
                                                                           
-                                                                          (let ((commando (compose_set_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
-                                                                            (print_commando (compose_print_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection)))))
+                                                                          (let* ((commando (compose_set_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
+                                                                            (print_commando (compose_print_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection))))
+                                                                             (answer (util:send majordomo 'request commando name_of_device)))
                                                                                (send text insert (format ">> Sending ~a to ~a in the ~a ... \n " print_commando device-name current-steward))
-                                                                            (send text insert (format ">>>> Answer: ~a \n" (util:send majordomo 'request commando name_of_device))))
+                                                                            (send text insert (format ">>>> Answer: ~a \n" answer))
+                                                                               (if (check_ack answer)
+                                                                               ( util:send logsystem 'change-mesurement current-steward name_of_device (send choice get-string-selection) (send (get-right-slider (send choice get-string-selection)) get-value))
+                                                                            
+                                                                               'nack))
                                                                           'done)))
                                                                          ;stuur commando 
                                                                    
@@ -315,21 +335,35 @@
 
 ;enkel choice box instellen, pas bij selectie komt de slider  
 (send setter_panel change-children (lambda (x) (list choice)))
-
-
+  
+    (define (check-policies)
+          (if (util:send majordomo 'check-authorized)
+              'ok
+              (begin
+              (send device_info_canvas delete-child change_panel)
+              (new message% [parent device_info_canvas] 
+                   [label (make-object bitmap% "no-permission.png" 'png/alpha)]
+                   [stretchable-width #t]	 
+                   [stretchable-height #t]	 
+                   [auto-resize #t]
+                   )) ))
+    
+    
 (define (update_device_info)
   (send device_info_canvas_info_GET change-children (lambda (x) '()))
-  (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline)))
+  (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline))
+  (util:send logsystem 'status-update (util:send majordomo 'get-current-steward) name_of_device))
 
 
 (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline) )
     (create_info_panel device_info_canvas_info_DEV (split-string-in-list (util:send majordomo 'request "DEV\n" name_of_device) #\newline) )
 
-
+ 
 
 (define (dispatch message)
   (case message 
     ((get-tab) get-tab)
+    ((check-policies) check-policies)
     (else (error 'Multisensor "unknown message ~a" message))))
 dispatch
 ))

@@ -96,12 +96,11 @@
     
     (define tab-panel
       (new tab-panel%	 
-           [choices (list "Rooms" "Graphs" "Logs")]	 
+           [choices (list "Rooms" "Logs" "device-management")]	 
            [parent mainframe]
            [callback (lambda (tab-panel click)
                        (case (send tab-panel get-selection)
                          ((0) (send tab-panel change-children (lambda (x) (list tab1))))
-                         ((1) (send tab-panel change-children (lambda (x) (list analysticstab))))
                          (else 	 (util:send logtab-object 'update-log)	 	 	
                                     (send tab-panel change-children (lambda (x) (list logtab))) )
                          ))]))
@@ -117,17 +116,8 @@
     ;Tab1
     ;----
     
-    (define tab1-object (make_GUI_tab1-1 majordomo dispatch))
+    (define tab1-object (make_GUI_tab1-1 majordomo dispatch logsystem))
     (define tab1 (util:send tab1-object 'get-tab1))
-    
-    
-    
-    ;TAB2
-    ;----
-    
-    (define analysticstab-object (make_GUI_analysticstab dispatch))
-    (define analysticstab (util:send analysticstab-object 'get-analysticstab))
-    
     
     
     ;TAB3

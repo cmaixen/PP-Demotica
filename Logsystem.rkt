@@ -72,8 +72,8 @@
     
     ;schrijven van update logs
     
-    (define (status-update location)
-    (write-log (~a "UPDATE STATUS: Status of devices of steward at" location "updated" #:separator " ")))
+    (define (status-update location name)
+    (write-log (~a "UPDATE STATUS: Status of device" name  "at" location "updated" #:separator " ")))
     
     
    ;schrijven Login logs
@@ -87,8 +87,8 @@
     
     ;schrijven van change logs
     
-    (define (change-mesurement location name value)
-       (write-log (~a "CHANGE: Device" " " name " " "at location" " " location " " "changed in " value )))
+    (define (change-mesurement location name mesurement value)
+       (write-log (~a "CHANGE: Device" " " name " " "at location" " " location " " "changed " mesurement " in " value )))
     
     
     ;schrijven van status logs

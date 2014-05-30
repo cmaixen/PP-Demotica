@@ -8,7 +8,7 @@
 (provide make_GUI_tab1-3-multisensor)
 
 
-(define (make_GUI_tab1-3-multisensor majordomo GUI name_of_device)
+(define (make_GUI_tab1-3-multisensor majordomo GUI name_of_device logsystem)
   (let ((tab-panel (util:send GUI 'get-tabpanel))
         (mainframe (util:send GUI 'get-mainframe))
         (slider-enabled #f))
@@ -145,7 +145,19 @@
                               [alignment (list 'left 'center)]
                               ))
 
-        
+     
+     
+    (define (check-policies)
+          (if (util:send majordomo 'check-authorized)
+              'ok
+              (begin
+              (send device_info_canvas delete-child change_panel)
+              (new message% [parent device_info_canvas] 
+                   [label (make-object bitmap% "no-permission.png" 'png/alpha)]
+                   [stretchable-width #t]	 
+                   [stretchable-height #t]	 
+                   [auto-resize #t]
+                   )) ))
 
     
     (define (compose_set_command choice slider)
@@ -157,6 +169,9 @@
       (let ((value (send slider get-value)))
       (format "SET ~a=~a" choice value)))
         
+   (define (check_ack string)
+     (eq? (string-ref string 0) #\a ))
+    
       (define confirm_buttom (new button% [parent change_panel] 
                                 [label "Confirm Changes"]
                                 [vert-margin standaardmargin_button]	
@@ -173,7 +188,12 @@
                                                                                 (printcommando (compose_print_command (send choice get-string-selection) (get-right-slider (send choice get-string-selection)))))
                                                                             
                                                                             (send text insert (format ">> Sending ~a to ~a in the ~a ... \n " printcommando device-name current-steward))
-                                                                            (send text insert (format ">>>> Answer: ~a " (util:send majordomo 'request commando name_of_device))))
+                                                                            (util:send logsystem 'device-on current-steward device-name)
+                                                                            (let ((answer  (util:send majordomo 'request commando name_of_device)))
+                                                                            (send text insert (format ">>>> Answer: ~a " answer))
+                                                                             (if (check_ack answer)
+                                                                                 ( util:send logsystem 'change-mesurement current-steward name_of_device (send choice get-string-selection) (send (get-right-slider (send choice get-string-selection)) get-value))
+                                                                                 'nack)))
                                                                           'done)
                                                                  
                                                        
@@ -263,7 +283,8 @@
     
 (define (update_device_info)
   (send device_info_canvas_info_GET change-children (lambda (x) '()))
-  (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline)))
+  (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline))
+  (util:send logsystem 'status-update (util:send majordomo 'get-current-steward) name_of_device))
     
     
     (create_info_panel device_info_canvas_info_GET (split-string-in-list (util:send majordomo 'request "GET\n" name_of_device) #\newline))
@@ -276,6 +297,7 @@
     (define (dispatch message)
       (case message 
         ((get-tab) get-tab)
+        ((check-policies) check-policies)
         (else (error 'Powerplug-panel "unknown message ~a" message))))
     dispatch
     ))

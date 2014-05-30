@@ -94,7 +94,9 @@
     (define button-login (new button% [parent  Button_panel ] [label "Login"] [callback (lambda (button-cancel click)
                                                                                           (print (user_check (send (send username_input get-editor) get-text)))
                                                                                           (if (check_login (send (send username_input get-editor) get-text) (send (send password_input get-editor) get-text) )
-                                                                                              (begin (send dialog show #f) 
+                                                                                              (begin (send dialog show #f)
+                                                                                                    
+                                                                                                     (util:send majordomo 'set-current-user  (send (send username_input get-editor) get-text))
                                                                                                      (send mainframe set-label "Welcome to your personal Electricity Home Monitoring System"))
                                                                                               (send message set-label "Wrong Username/Password"))
                                                                                           
