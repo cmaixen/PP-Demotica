@@ -48,8 +48,8 @@
         (display type)
         (newline)
         (if (equal? type "ZBS-110") ;komt overeen met het product id van de powerplug
-         (make_GUI_tab1-3-powerplug majordomo dispatch name logsystem)
-     (make_GUI_tab1-3-multisensor majordomo dispatch name logsystem))))
+         (make_GUI_tab1-3-powerplug majordomo GUI name logsystem)
+     (make_GUI_tab1-3-multisensor majordomo GUI name logsystem))))
     
     (define (show_offline_devices tab)
       (define (loop lst result)
@@ -58,7 +58,7 @@
             (loop (cdr lst) (format "~a ~a" result (car lst)))))
       (new message% 
 [parent tab]         
-[label (loop (util:send majordomo 'get_offline_devices) "Offline Devices: ") ]))
+[label (loop (util:send majordomo 'get_offline_devices (util:send majordomo 'get-steward (util:send majordomo 'get-current-steward)) ) "Offline Devices: ") ]))
     
     ;genereren van juiste linking van knoppen van toestel naar toestel overzicht
     (define (buttongenerator-devices lst tab)
@@ -100,7 +100,7 @@
                                           ))
                          (list_devices_steward (begin
                                                  (util:send majordomo 'set-current-steward name)
-                                                 (util:send majordomo 'get_list_devicesnames_steward))))
+                                                 (util:send majordomo 'get_list_devicesnames_steward (util:send majordomo 'get-steward (util:send majordomo 'get-current-steward))))))
                     
                     ;zet current-steward juist 
                     (util:send majordomo 'set-current-steward name)
@@ -129,8 +129,6 @@
     (define (dispatch message)
       (case message 
         ((get-tab1) get-tab1)
-        ((get-tabpanel) get-tabpanel)
-        ((get-mainframe) get-mainframe)
         (else (error 'tab1-1  "unknown message ~a" message))))
     
     

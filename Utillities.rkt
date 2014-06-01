@@ -52,12 +52,9 @@
 ;Berekent de lengte van een lijst
 
 (define (list_size lst)
-  
   (define (loop lst counter)
-    
     (cond  ((empty? lst) 0)
            ((empty? (cdr lst)) counter )
-       
            (else  (loop (cdr lst) (+ counter 1)))))
   (loop lst 1))
 
@@ -80,33 +77,6 @@
          (loop (cdr lstt) (cons (car lstt) res))))
   (loop lst '()))
 
-
-    ;procedure bepaalt welke standaardwaarde er moet gegeven  worden
-(define (mesurement_default type)
-  (if (equal? type temperaturesensor_type)
-      temperaturesensor_default_value
-      lightswitch_default_value))
-
-
-;generieke functie om stewardoverschrijdend informatie op te vragen 
-
-;VEREISTEN! MESSAGE MOET EEN LITERAL ZIJN!
-
-  (define (list_devices_spectype list_w_stewards type message majordomo)
-     (define (loop stewardlist result)
-       (if (empty? stewardlist)
-       result
-       (let ((first-steward (car stewardlist)))
-         ;de majordomo moet weten om welke steward het gaat
-         (send majordomo 'set-current-steward first-steward)
-       (newline) 
-         (display "type spectype")
-         (display type)
-         (newline)
-         (display message)
-         (newline)
-      (loop (cdr stewardlist) (append result (send majordomo message type))))))
-      (loop list_w_stewards '()))
 
   
       (define (send-over-tcp message steward . type)
@@ -136,15 +106,61 @@
       (let ((serveradress (cadr steward)))
         (cdr serveradress)))
     
+    ;    ;zet vectors en naar bytes
+    (define (vector->bytes vector)
+      (list->bytes (vector->list vector)))
     
-;reply_value bij een error is een string
-;ander kan het eender wat zijn
-;ATTENTION: does not return a boolean
-(define (acknowledged reply)
-  (let* ((raw_output reply)
-         (acknowledge_sign  (car raw_output))
-         (reply_value (cadr raw_output)))
-    (if (eq? 'ACK acknowledge_sign)
-        reply_value
-        (begin (display reply_value)
-        (error reply_value)))))
+    ;zet bytes om naar een vector
+    (define (bytes->vector bytes)
+      (list->vector (bytes->list bytes)))
+
+    
+    
+      (define (string->vector string)
+    (list->vector (map char->integer (string->list string))))
+  
+  (define (vector->string vector)
+    (list->string  (map integer->char (vector->list vector))))
+  
+  
+        (define (make_frame . arguments)
+          (define (loop lst result)
+            (if (null? lst)
+                (list->vector result)
+            (let ((first_arg (car lst)))
+              (cond ((integer? first_arg)
+                     (loop (cdr lst) (append result (list first_arg))))
+                    ((vector? first_arg)
+                     (loop (cdr lst) (append result (vector->list first_arg))))
+                    ((string? first_arg)
+                     (loop (cdr lst) (append result (map char->integer (string->list first_arg)))))
+                    (else (display "invalid type to make frame")
+                          (newline))))))
+          (loop arguments '()))
+         
+    
+ 
+    
+              
+  
+  ;hulpfunctie om snel info uit verctors te krijge
+  (define (vector-loop start end given-vector)
+    (define (loop counter final-vector)
+      (if (> counter end)
+          final-vector
+          (begin
+            (vector-set! final-vector (- counter start) (vector-ref given-vector (- counter 1)))
+            (loop (+ counter 1) final-vector))))
+    (loop start (make-vector (+ (- end start) 1))))
+  
+  
+            
+  (define (append_string . arguments)
+    (define (loop lst result)
+      (if (null? lst)
+          (list->string result)
+          (loop (cdr lst) (append result (string->list (car lst))))))
+    (loop arguments '()))
+  
+
+

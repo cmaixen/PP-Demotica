@@ -28,8 +28,8 @@
 
 
 (define (create-loginscreen majordomo GUI logsystem)
-  (let ((db (util:send majordomo 'get-db))
-        (mainframe (util:send GUI 'get-mainframe)))
+  (let 
+       ( (mainframe (util:send GUI 'get-mainframe)))
         
   
   (define (get-loginscreen)
@@ -40,10 +40,10 @@
     
     ;Username check
     (define (user_check name)
-      (query-maybe-value db "select Username from user_system where Username = $1"  name))
+      (util:send majordomo 'user_check  name))
     
     (define (get-password  name)
-      (query-value db "select Password from user_system where Username = $1"  name))
+       (util:send majordomo 'get-password name))
     
     ;test of username aanwezig is en of passwoord dan correct is.
     ;lazy and is hier ideaal vanwege het feit dat het eerst gaat controleren of de username bestaat

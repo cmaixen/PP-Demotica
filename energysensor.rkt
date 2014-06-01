@@ -1,8 +1,9 @@
 #lang r5rs
 
 (#%require racket/base)
-(#%require "Utillities.rkt")
 (#%require "xbee_utils.rkt")
+(#%require "Constants.rkt")
+(#%require  "Utillities.rkt")
 (#%provide (all-defined))
 
 (define (make-energysensor)
@@ -82,7 +83,7 @@
       (let ((3_letter_command (vector->string (vector-loop 5 7 message))) ;SET + spatie is voorafgaand is vector
             (5_letter_command (vector->string (vector-loop 5 9 message)))
             (nack #f))
-        (display 3_letter_command)
+
         (newline)
         (cond ((equal? 3_letter_command "TXT")
                (let ((new_val (vector->string (vector-loop 9 (vector-length message) message))))
@@ -123,7 +124,7 @@
     
     
     
-    (define (handle-request message)
+    (define (request message)
       (let ((command (get-command message)))
         (cond ((equal? command "GET")
                (prepare_getframe))
@@ -139,7 +140,7 @@
         ((get_64-adress) get_64-adress)
         ((get_name) get_name)
         ((get_16-adress) get_16-adress)
-        ((request) handle-request)
+        ((request) request)
         (else (display "EnergySensor: unknown message")
               (newline))))
     

@@ -27,6 +27,7 @@
 (require plot)
 (#%require (prefix util: "Utillities.rkt"))
 (#%require "GUI_utillities.rkt")
+(#%require "Constants.rkt")
 (provide make_GUI_analysticstab)
 
 
@@ -53,7 +54,7 @@
                      [paint-callback
                       (lambda (canvas dc)
                         (plot/dc (discrete-histogram
-                                  (let* ((input (open-input-file  "graph-light"))
+                                  (let* ((input (open-input-file light-graph-file))
                                          
                                          (input (read input)))
                                     
@@ -80,7 +81,7 @@
                      [paint-callback
                       (lambda (canvas dc)
                         (plot/dc (discrete-histogram
-                                  (let* ((input (open-input-file  "graph-temp"))
+                                  (let* ((input (open-input-file temp-graph-file))
                                          
                                          (input (read input)))
                                     

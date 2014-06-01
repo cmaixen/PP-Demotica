@@ -29,6 +29,17 @@
 (define temp-graph-sleep 3)
 
 
+;representatie online/offline
+(define online 1)
+(define offline 0)
+
+;verkrijgen van toesteltype
+(define productID_offset  5)
+(define productID_end 11)
+
+;Permissionlevels
+(define admin_level 1)
+
 
 ;Constants GUI
 ;-------------
@@ -68,23 +79,7 @@
 ;Constants ADT Steward
 ;---------------------
 
-;positie van de kolommen in de device_tables
-(define device_table_name_column 0)
-(define device_table_serial_column 1)
-(define device_table_com_adress_column 2)
-(define device_table_type_column 3)
-(define device_table_status_column 4)
-(define device_table_mesurement_column 5)
-
-
-(define temperaturesensor_type "Temperaturesensor")
-(define lightswitch_type "Lightswitch")
-
-;standaardwaarde van status
-(define status_default_value "on")
-
-(define temperaturesensor_default_value 25)
-(define lightswitch_default_value 50)
+(define offlinecounterlimit 10)
 
 
 

@@ -34,6 +34,8 @@
 (require db)
 (#%require (prefix util: "Utillities.rkt"))
 (#%require "GUI_tab1-1.rkt")
+(#%require (prefix util: "Utillities.rkt"))
+(#%require "GUI_tab1.rkt")
 (#%require "GUI_loginscreen.rkt")
 (#%require "GUI_logtab.rkt")
 (#%require "GUI_analysticstab.rkt")
@@ -76,8 +78,6 @@
       (case message 
         ((start) start)
         ((get-tabpanel) get-tabpanel)
-        ((get-current-listbox) get-current-listbox)
-        ((set-current-listbox) set-current-listbox)
         ((get-mainframe) get-mainframe)
         (else (error 'GUI "unknown message ~a" message))))
     
@@ -96,11 +96,14 @@
     
     (define tab-panel
       (new tab-panel%	 
-           [choices (list "Rooms" "Logs" "device-management")]	 
+           [choices (list "Rooms" "Analystics" "Add device" "Logs" )]	 
            [parent mainframe]
            [callback (lambda (tab-panel click)
                        (case (send tab-panel get-selection)
                          ((0) (send tab-panel change-children (lambda (x) (list tab1))))
+                          ((1) (send tab-panel change-children (lambda (x) (list analystic))))
+                         ((2) (send tab-panel change-children (lambda (x) (list tab3))))
+                         
                          (else 	 (util:send logtab-object 'update-log)	 	 	
                                     (send tab-panel change-children (lambda (x) (list logtab))) )
                          ))]))
@@ -120,7 +123,20 @@
     (define tab1 (util:send tab1-object 'get-tab1))
     
     
-    ;TAB3
+    ;TAB 2
+    ;-----
+    
+  
+    (define analyse-object (make_GUI_analysticstab dispatch majordomo))
+    (define analystic (util:send analyse-object 'get-analysticstab))
+    
+    ;TAB 3
+    ;-----
+    
+    (define tab3-object (make_GUI_tab3 majordomo dispatch logsystem))
+    (define tab3 (util:send tab3-object 'get-tab3))
+    
+    ;TAB4
     ;----
     
     (define logtab-object (make_GUI_logtab dispatch))

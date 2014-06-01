@@ -9,3 +9,9 @@
 - 2014-05-31 01:05:09:  UPDATE STATUS: Status of device PowerPlug at Livingroom updated
 - 2014-05-31 01:05:14:  CHANGE: Device PowerPlug at location Livingroom changed LOAD in 68
 - 2014-05-31 01:05:14:  UPDATE STATUS: Status of device PowerPlug at Livingroom updated
+- 2014-05-31 10:57:44:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2014-05-31 10:57:59:  LOGIN SUCCESFULL: You succefull logged in with vub
+- 2014-05-31 11:08:26:  LOGIN SUCCESFULL: You succefull logged in with admin
+- 2014-06-01 12:58:01:  ADD: Device ' dfsd ' added in Livingroom
+- 2014-06-01 13:20:15:  ADD: Device ' dfg ' added in Livingroom
+- 2014-06-01 13:21:29:  ADD: Device ' test ' added in Livingroom

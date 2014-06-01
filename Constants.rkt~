@@ -17,6 +17,8 @@
 ;positie van de kolommen in steward_table 
 (define steward_table_locationcolummn 0)
 (define steward_table_steward_database_column 1)
+(define steward_table_ip_column 2)
+(define steward_table_port_column 3)
 
 
 ;locatie van de database
